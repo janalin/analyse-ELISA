@@ -1,0 +1,37 @@
+# Estimate calibration curve {#calibration}
+## The four-parameter logistic curve
+The relationship between concentration and absorbance can be described by the so called _four-parameter logistic equation (4-PL)_. We will use the following equation:
+
+$$f(c) =  \mathrm{A_{min}} + \frac{\mathrm{A_{max}} - \mathrm{A_{min}}}{1+\exp(\mathrm{n} \cdot (\log_2(c)-\log_2(\mathrm{EC}_{50})))}$$,
+
+where $A$ stands for absorbance and $c$ for concentration. The parameters that we are going to estimate are $A_{max}$, which is the maximal absorbance that can be obtained (for infinite concentration $c \rightarrow \infty$), $A_{min}$, which is the minimum absorbance that can be obtained (for $c \rightarrow 0$), and parameters $EC_{50}$ and $n$. The value $\log EC_{50}$ is the inflection point of the curve (at what concentration $c$ we obtain 50% of $A_{max}$), and $n$ is related to the steepness of the curve at the inflection point. We performed a 1:2 dilution series to generate the concentrations of our standard. For convinience, we use $\log_2$ in the equation (and not $log_10$ as often used in literature), because then our estimated $EC_{50}$ is easier to interpret. Note that $\log_2(x) = \frac{log_{10}(x)}{log_2(10)} = 0.30103 \cdot log_{10}(x)$. Thus, changing the base simply scales all concentration by a constant value (which is linear transformation).
+
+## Regression of the standard
+We fit the data obtained for the standard to the four-parameter logistic curve:
+```{r, regress-std, echo = TRUE, eval = F, warning = FALSE, message = FALSE}
+# Fit 4-parameter logistic dose-response curve using the drc package
+# NOTE: the drm function performs a log10(x) transformation by itself. This is crucial to obtain robust fit results. 
+# See also ?LL2.4 for more information
+drc.fit <- drm(od ~ dilution, data = standard, fct = LL2.4(names=c("Slope", "Lower", "Upper", "ED50")))
+summary(drc.fit)
+plot(drc.fit)
+# Check residuals
+qplot(as.tibble(drc.fit$predres)$`Predicted values`, as.tibble(drc.fit$predres)$Residuals)
+hist(as.tibble(drc.fit$predres)$Residuals, breaks = 5)
+
+# # Compare to nls fit
+# nls.fit <- nls(od ~ ODmin + ((ODmax - ODmin)/(1 + exp(n * (log(dilution) - log(EC50))))), 
+#                data = standard,
+#                start = list(ODmax = 2, ODmin = -0.5, EC50 = 310, n = -1))
+# summary(nls.fit)
+# plot(nls.fit)
+
+# Compare to Levenber-Marquardt fit
+levm.fit = nlsLM(od ~ ODmin + ((ODmax - ODmin)/(1 + exp(n * (log(dilution) - log(EC50))))), 
+               data = standard,
+               start = list(ODmax=2.4, ODmin = -0.05, EC50 = log(6), n = -1))
+summary(levm.fit)
+plot(levm.fit)
+```
+
+## Summary 

@@ -1,0 +1,5 @@
+Type: Book/html
+Title: Analyse ELISA data in R
+Version: 0.0.1
+Imports: bookdown
+Remotes:

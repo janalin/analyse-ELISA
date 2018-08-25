@@ -1,0 +1,10 @@
+.DS_Store
+.Rproj.user
+.Rhistory
+.RData
+_notes.txt
+_book
+_book/*
+_book*/*
+_bookdown_files
+rsconnect

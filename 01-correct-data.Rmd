@@ -1,0 +1,126 @@
+# Correct data {#correct-data}
+First, we define functions to 1) get background-corrected samples, 2) compute the dilution concentrations, and 3) to get a data frame with the values of the standard.
+```{r, corr-data, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+# Select and background-correct samples (single row, n.cols columns)
+#' @param data input data frame
+#' @param row.idx row index in the input data frame of the sample
+#' @param col.dix column index in the input data frame of the first cell of the sample
+#' @param n.cols number of columns to consider
+#' @return a data frame with background-corrected values
+get.corr.sample <- function(data, row.idx, col.idx, n.cols) {
+  row.end <- row.idx + 1 # we select only two rows (450 nm and 620 nm measurements)
+  col.end <- col.idx + (n.cols - 1) # the number of columns are user defined
+  sample <- data %>%
+    .[row.idx:row.end, col.idx:col.end]
+  corr.sample <- sample[1, ] - sample[2, ]
+  return(as.tibble(corr.sample))
+}
+
+# Compute dilution series
+#' @param max.dilution maximal concentration
+#' @param n.dilutions number of dilutions performed
+#' @param dilution.fact dilution factor
+#' @return a vector with concentrations
+comp.dilutions <- function(
+  max.dilution = max.dilution, n.dilutions = n.dilutions, dilution.fact = dilution.fact) {
+  dilutions <- sapply(
+    seq(0, (n.dilutions - 1)),
+    function(x) max.dilution / (dilution.fact^x)
+  )
+  return(dilutions)
+}
+
+# Get serum background-corrected standard
+# TODO: add documentation
+get.standard <- function(data = data,
+                         row.idx = row.idx.std,
+                         col.idx = col.idx.std,
+                         n.dilutions = n.dilutions,
+                         n.repl = n.repl,
+                         dilution.fact = dilution.fact,
+                         max.dilution = max.dilution, 
+                         dilutions = dilutions) {
+  row.end <- row.idx + (n.dilutions * 2) - 1
+  col.end <- col.idx + (n.repl - 1)
+  standard <- data %>% .[row.idx:row.end, col.idx:col.end]
+  corr.standard <- purrr::map_df(
+    seq(1, row.end, by = 2),
+    ~ get.corr.sample(data = standard, ., col.idx = 1, n.cols = n.repl)
+  ) %>%
+    na.omit() %>%
+    setNames(seq(n.repl)) %>%
+    dplyr::mutate(dilution = dilutions) %>%
+    tidyr::gather(key = replicate, value = absorbance, -dilution) %>%
+    dplyr::group_by(replicate)
+
+  return(corr.standard)
+}
+```
+
+Now we select the wells with the standard:
+```{r, get-standard, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+dilutions <- comp.dilutions(
+  max.dilution = max.dilution,
+  n.dilutions = n.dilutions,
+  dilution.fact = dilution.fact
+)
+
+standard <- get.standard(
+  data = data,
+  row.idx = row.idx.std,
+  col.idx = col.idx.std,
+  n.dilutions = n.dilutions,
+  n.repl = n.repl.std,
+  dilution.fact = dilution.fact,
+  max.dilution = max.dilution, 
+  dilutions = dilutions
+)
+# Inspect result
+standard
+```
+
+And we select the wells with the blanks:
+```{r, get-blanks, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+# get blanks
+blanks <- get.corr.sample(data, row.idx.blank, col.idx.blank, n.cols = 2) %>%
+  setNames(seq(1, dim(.)[2])) %>%
+  tidyr::gather(key = replicate, value = blank)
+# Inpsect blanks
+blanks
+```
+
+And finally the wells with our samples -- in our case, we have samples from four donors and a time series with five data points:
+```{r, select-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+# Inspect data
+# View(data)
+
+# TODO: add documentation
+get.donors <- function(row.idx = row.idx.donor.1,
+                       col.idx = col.idx.donor.1,
+                       n.cols = length(tpoints),
+                       n.repl = n.repl.donors) {
+  row.end <- row.idx + 1 + 2 * (n.repl.donors - 1) # here, replicates are performed row-wise
+  col.end <- col.idx + (n.cols - 1) # number of columns is user defined
+  sample <- data %>% .[row.idx:row.end, col.idx:col.end]
+  corr.sample <- get.corr.sample(
+    data = sample, row.idx = 1, col.idx = 1, n.cols = length(tpoints)
+  )
+  return(corr.sample)
+}
+
+donors <- purrr::map_df(
+  seq(row.idx.donor.1, (row.idx.donor.1 + 2 * (n.donors - 1)), by = 2),
+  ~ get.donors(., col.idx = col.idx.donor.1, n.cols = length(tpoints), n.repl = n.repl.donors)
+) %>%
+  setNames(tpoints) %>%
+  dplyr::mutate(donor = seq(1, n.donors)) %>%
+  dplyr::mutate(donor = factor(donor, unique(donor))) %>%
+  tidyr::gather(key = "time", value = "absorbance", -donor) %>%
+  dplyr::mutate(time = as.integer(time)) %>%
+  dplyr::group_by(donor)
+
+# Inspect data
+donors
+```
+
+Before we proceed with the analysis, let's have plot the data and see wether it looks reasonable. 

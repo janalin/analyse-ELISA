@@ -1,0 +1,81 @@
+---
+title: "Analyse ELISA data in _R_"
+author: "JL"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: janalin/ELISA-analysis
+description: ""
+---
+
+# Introduction {#intro}
+This is an _R_ notebook script to analyse ELISA data from an _Synergy H1_ plate reader from BioTek. This script was written for experiments performed in our lab: it reads the excel file provided by the plate reader, performs a background-correction, generates the calibration curve and computes the sample concentrations with respect to this calibration curve.
+
+In the presented test experiment, we measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm and 620 nm (provided by the plate reader in a single excel sheet). If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm to exclude (unspecific) background absorbance of the plate.  
+
+## Load libraries and import excel
+We first load some _R_ libraries that we want to use.
+```{r, load-libs, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+# load packages
+if (!requireNamespace("pacman", quietly = TRUE)){
+  install.packages("pacman")}
+pacman::p_load(bookdown, # to create this document
+               tidyverse, # for data wrangling
+               ggplot2, cowplot, # for nice plots
+               gdata, # to read excel files
+               here, # to find the absolute path of the project
+               purrr, # for functional programming
+               viridis, # for color palettes
+               drc, minpack.lm) # for 4-param logistic regression
+```
+
+Now we read the excel file:
+```{r, import-data, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+# Get the project path
+path <- here::here()
+# Set the name of the excel file
+file <- "/../data/180821-IgG_HV_Test.xlsx"
+# Import excel data
+data <- gdata::read.xls(paste0(path, file), sheet = 1, header = FALSE) %>% as.tibble
+# Let's have a look at the absorbance data
+head(data[complete.cases(data),])
+# And these are our plate reader specifications:
+data[,1:2]
+```
+
+## Set cell indices and set experimental parameteres
+We need to specify some parameters manually. Our experiment was performed in duplicates (`n.repl = 2`) and the calibration samples were in the first two columns (columns 1 and 2).
+```{r, select-cells, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
+# Uncomment the line below to inspect the data
+# View(data)
+
+
+# Set row row and column index with 450 nm measurment of a blank:
+row.idx.blank <- 36
+col.idx.blank <- 13
+
+# Set row row and column index with 450 nm measurment of well 1A:
+row.idx.std <- 22
+col.idx.std <- 3
+# Number of replicates for standard curve
+n.repl.std <- 2
+# Maximal value of the standard concentraton
+max.dilution <- 2^11
+# Number of dilutions performed for the calibration curve
+n.dilutions <- 8
+# Dilution factor
+dilution.fact = 2
+
+# Define the position of the first well with the sample of the for first donor:
+row.idx.donor.1 <- 22
+col.idx.donor.1 <- 5
+n.donors <- 4
+tpoints <- c(0, 7, 30, 60, 180)
+n.repl.donors <- 1
+```
+
+Now we can start with the analysis. 
