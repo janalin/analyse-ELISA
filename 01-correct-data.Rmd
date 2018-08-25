@@ -1,15 +1,17 @@
 # Correct data {#correct-data}
-First, we define functions to 1) get background-corrected samples, 2) compute the dilution concentrations, and 3) to get a data frame with the values of the standard.
+First, we define functions to 1) get background-corrected values of our samples, 2) compute the standard concentrations, and 3) to get tidy data frames of the standard and and the biological samples.
 ```{r, corr-data, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
-# Select and background-correct samples (single row, n.cols columns)
+# Gets samples, performs background correction
+# Works only on single rows of the 96-well plate
+# The number of columns is user defined (set n.cols)
 #' @param data input data frame
 #' @param row.idx row index in the input data frame of the sample
 #' @param col.dix column index in the input data frame of the first cell of the sample
-#' @param n.cols number of columns to consider
+#' @param n.cols number of columns to get in the input data frame
 #' @return a data frame with background-corrected values
-get.corr.sample <- function(data, row.idx, col.idx, n.cols) {
+correct.sample <- function(data, row.idx, col.idx, n.cols) {
   row.end <- row.idx + 1 # we select only two rows (450 nm and 620 nm measurements)
-  col.end <- col.idx + (n.cols - 1) # the number of columns are user defined
+  col.end <- col.idx + (n.cols - 1) # the number of columns is user defined
   sample <- data %>%
     .[row.idx:row.end, col.idx:col.end]
   corr.sample <- sample[1, ] - sample[2, ]
@@ -17,20 +19,20 @@ get.corr.sample <- function(data, row.idx, col.idx, n.cols) {
 }
 
 # Compute dilution series
-#' @param max.dilution maximal concentration
+#' @param max.conc.std maximal concentration
 #' @param n.dilutions number of dilutions performed
 #' @param dilution.fact dilution factor
 #' @return a vector with concentrations
 comp.dilutions <- function(
-  max.dilution = max.dilution, n.dilutions = n.dilutions, dilution.fact = dilution.fact) {
+  max.conc.std = max.conc.std, n.dilutions = n.dilutions, dilution.fact = dilution.fact) {
   dilutions <- sapply(
     seq(0, (n.dilutions - 1)),
-    function(x) max.dilution / (dilution.fact^x)
+    function(x) max.conc.std / (dilution.fact^x)
   )
   return(dilutions)
 }
 
-# Get serum background-corrected standard
+# Get background-corrected standard
 # TODO: add documentation
 get.standard <- function(data = data,
                          row.idx = row.idx.std,
@@ -38,29 +40,42 @@ get.standard <- function(data = data,
                          n.dilutions = n.dilutions,
                          n.repl = n.repl,
                          dilution.fact = dilution.fact,
-                         max.dilution = max.dilution, 
+                         max.conc.std = max.conc.std, 
                          dilutions = dilutions) {
   row.end <- row.idx + (n.dilutions * 2) - 1
   col.end <- col.idx + (n.repl - 1)
   standard <- data %>% .[row.idx:row.end, col.idx:col.end]
   corr.standard <- purrr::map_df(
     seq(1, row.end, by = 2),
-    ~ get.corr.sample(data = standard, ., col.idx = 1, n.cols = n.repl)
+    ~ correct.sample(data = standard, ., col.idx = 1, n.cols = n.repl)
   ) %>%
     na.omit() %>%
     setNames(seq(n.repl)) %>%
     dplyr::mutate(dilution = dilutions) %>%
-    tidyr::gather(key = replicate, value = absorbance, -dilution) %>%
-    dplyr::group_by(replicate)
+    tidyr::gather(key = replicate, value = absorbance, -dilution)
 
   return(corr.standard)
 }
+
+# TODO: add documentation
+get.donors <- function(row.idx = row.idx.donor.1,
+                       col.idx = col.idx.donor.1,
+                       n.cols = length(tpoints),
+                       n.repl = n.repl.donors) {
+  row.end <- row.idx + 1 + 2 * (n.repl.donors - 1) # here, replicates are performed row-wise
+  col.end <- col.idx + (n.cols - 1)
+  sample <- data %>% .[row.idx:row.end, col.idx:col.end]
+  corr.donors <- correct.sample(
+    data = sample, row.idx = 1, col.idx = 1, n.cols = length(tpoints)
+  )
+  return(corr.donors)
+}
 ```
 
-Now we select the wells with the standard:
+Now we can create a data frame with the corrected data of the standard:
 ```{r, get-standard, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 dilutions <- comp.dilutions(
-  max.dilution = max.dilution,
+  max.conc.std = max.conc.std,
   n.dilutions = n.dilutions,
   dilution.fact = dilution.fact
 )
@@ -72,42 +87,25 @@ standard <- get.standard(
   n.dilutions = n.dilutions,
   n.repl = n.repl.std,
   dilution.fact = dilution.fact,
-  max.dilution = max.dilution, 
+  max.conc.std = max.conc.std, 
   dilutions = dilutions
 )
 # Inspect result
 standard
 ```
 
-And we select the wells with the blanks:
+Here we select the wells with the blanks:
 ```{r, get-blanks, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 # get blanks
-blanks <- get.corr.sample(data, row.idx.blank, col.idx.blank, n.cols = 2) %>%
+blanks <- correct.sample(data, row.idx.blank, col.idx.blank, n.cols = 2) %>%
   setNames(seq(1, dim(.)[2])) %>%
   tidyr::gather(key = replicate, value = blank)
 # Inpsect blanks
 blanks
 ```
 
-And finally the wells with our samples -- in our case, we have samples from four donors and a time series with five data points:
+And finally we create a data frame with the corrected data of our biological samples. In our case, we have a time series with five data points for four donors:
 ```{r, select-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
-# Inspect data
-# View(data)
-
-# TODO: add documentation
-get.donors <- function(row.idx = row.idx.donor.1,
-                       col.idx = col.idx.donor.1,
-                       n.cols = length(tpoints),
-                       n.repl = n.repl.donors) {
-  row.end <- row.idx + 1 + 2 * (n.repl.donors - 1) # here, replicates are performed row-wise
-  col.end <- col.idx + (n.cols - 1) # number of columns is user defined
-  sample <- data %>% .[row.idx:row.end, col.idx:col.end]
-  corr.sample <- get.corr.sample(
-    data = sample, row.idx = 1, col.idx = 1, n.cols = length(tpoints)
-  )
-  return(corr.sample)
-}
-
 donors <- purrr::map_df(
   seq(row.idx.donor.1, (row.idx.donor.1 + 2 * (n.donors - 1)), by = 2),
   ~ get.donors(., col.idx = col.idx.donor.1, n.cols = length(tpoints), n.repl = n.repl.donors)
@@ -123,4 +121,4 @@ donors <- purrr::map_df(
 donors
 ```
 
-Before we proceed with the analysis, let's have plot the data and see wether it looks reasonable. 
+Before we proceed with the analysis, let's plot the data and see whether it looks reasonable. 

@@ -1,5 +1,5 @@
 # Plot data {#plot-data}
-For convience, we first define a plot theme:
+For convience, we define a plot theme that suits our taste:
 
 ## Define plot theme
 ```{r, plot-theme, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
@@ -113,14 +113,13 @@ plot.std <- function(
 plot.std()
 ```
 
-
 We see that the concentration of the dilution series is on a logarithmic scale. Let's replot the results with $\log_2$-transformed concentrations ($\log_2$ for a dilution factor of 2):
 ```{r, plot-std-log, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height = 4}
 plot.std(semilog = TRUE)
 ```
 
 ## Plot biological samples
-Now let's have a look at our actual data. We measured IgG in serum of four donors on five different time points. We create a plot for our biological samples and then plot it together with the standard curve to have a better overview.
+Now let's have a look at our actual data. We measured IgG in serum of four donors on five different time points. We first define a plot for our biological samples and then plot it together with the standard curve to have a better overview.
 ```{r, plot-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, chache = TRUE}
 plot.donors <- function(
   title.hjust = 0, legend.pos = "right", legend.dir = "vertical", semilog = FALSE) {

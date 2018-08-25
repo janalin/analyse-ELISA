@@ -3,7 +3,7 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="https://janalin.github.io/analyse-ELISA/">Analyse ELISA data in _R_</a></li>
+        <li><a href="https://janalin.github.io/analyse-ELISA/">Analyse ELISA data in R</a></li>
       after: |
     download: ["pdf", "epub"]
 bookdown::pdf_book:

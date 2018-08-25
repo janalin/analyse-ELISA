@@ -13,11 +13,12 @@ description: ""
 ---
 
 # Introduction {#intro}
-This is an _R_ notebook script to analyse ELISA data from an _Synergy H1_ plate reader from BioTek. This script was written for experiments performed in our lab: it reads the excel file provided by the plate reader, performs a background-correction, generates the calibration curve and computes the sample concentrations with respect to this calibration curve.
+This document shows how to analyse ELISA data in _R_. The code was written to analyse ELISA experiments performed in our lab: the script reads the excel file provided by a _Synergy H1_ 96-well plate reader from BioTek, performs a background-correction, generates the calibration curve and computes the sample concentrations with respect to this calibration curve.
 
-In the presented test experiment, we measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm and 620 nm (provided by the plate reader in a single excel sheet). If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm to exclude (unspecific) background absorbance of the plate.  
+## About the experiment in brief
+We measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm -- to measure the substrate specific absorbance -- and at 620 nm -- to measer the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.
 
-## Load libraries and import excel
+## Load libraries and import excel fiele
 We first load some _R_ libraries that we want to use.
 ```{r, load-libs, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 # load packages
@@ -41,36 +42,44 @@ path <- here::here()
 file <- "/../data/180821-IgG_HV_Test.xlsx"
 # Import excel data
 data <- gdata::read.xls(paste0(path, file), sheet = 1, header = FALSE) %>% as.tibble
-# Let's have a look at the absorbance data
+# Let's have a look at the absorbance data.
 head(data[complete.cases(data),])
-# And these are our plate reader specifications:
+```
+
+The odd rows show the absorbance at 450 nm and the even rows the absorbance at 620 nm. As expected, the background absorbance at 620 nm is very low. 
+
+And these are our plate reader specifications
+```{r, plate-reader, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
+# Inspect plate reader specifications:
 data[,1:2]
 ```
 
 ## Set cell indices and set experimental parameteres
-We need to specify some parameters manually. Our experiment was performed in duplicates (`n.repl = 2`) and the calibration samples were in the first two columns (columns 1 and 2).
+We need to specify some experiment-specific parameters manually such the location of the standard samples and blanks, the number of replicates, etc. 
 ```{r, select-cells, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
-# Uncomment the line below to inspect the data
-# View(data)
+# Use View(data) to double-check row and column indices
 
-
-# Set row row and column index with 450 nm measurment of a blank:
+## BLANKS
+# Location of the 450 nm measurment of our blanks
 row.idx.blank <- 36
 col.idx.blank <- 13
 
-# Set row row and column index with 450 nm measurment of well 1A:
+## STANDARD SAMPLES
+# Location of the 450 nm measurment of the first well 
+# of our standard (well 1A in our case)
 row.idx.std <- 22
 col.idx.std <- 3
-# Number of replicates for standard curve
+# Number of replicates of the standard
 n.repl.std <- 2
-# Maximal value of the standard concentraton
-max.dilution <- 2^11
-# Number of dilutions performed for the calibration curve
+# Maximal concentration of the standard 
+max.conc.std <- 2^11
+# Number of dilutions performed to obtain the calibration curve
 n.dilutions <- 8
 # Dilution factor
 dilution.fact = 2
 
-# Define the position of the first well with the sample of the for first donor:
+## BIOLOGICAL SAMPLES
+# Location of first well with the sample of the first donor (here well 3A)
 row.idx.donor.1 <- 22
 col.idx.donor.1 <- 5
 n.donors <- 4
@@ -78,4 +87,4 @@ tpoints <- c(0, 7, 30, 60, 180)
 n.repl.donors <- 1
 ```
 
-Now we can start with the analysis. 
+Now we can start analysing the data.
