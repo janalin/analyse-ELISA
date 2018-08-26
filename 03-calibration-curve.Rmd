@@ -121,6 +121,6 @@ ggplot(as.tibble(drc.fit$predres)) +
   geom_hline(yintercept = 0, lwd = 0.2)
 ```
 
-Using the estimated parameters and the 4-PL equation, we can estimate the amount of IgG from the measured absorbance (in our case, we can only estimate a relative concentration).
+Using the estimated parameters and the 4-PL equation, we can estimate unknown concentrations based on measured absorbance. 
   
   

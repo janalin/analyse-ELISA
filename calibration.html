@@ -175,7 +175,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.1</span> The four-parameter logistic curve</h2>
 <p>The relationship between concentration and absorbance can be described by the so called <em>four-parameter logistic equation (4-PL)</em>. We will use the following equation:</p>
 <p><span class="math display">\[A = f(c) =  \mathrm{A_{min}} + \frac{\mathrm{A_{max}} - \mathrm{A_{min}}}{1+\exp(\mathrm{n} \cdot (\log_2(c)-\log_2(\mathrm{EC}_{50})))}\]</span>,</p>
-<p>where <span class="math inline">\(\mathrm{A}\)</span> stands for absorbance and <span class="math inline">\(c\)</span> for concentration. The parameters that we are going to estimate are <span class="math inline">\(\mathrm{A_{max}}\)</span>, which is the maximal absorbance that can be obtained (for infinite concentration <span class="math inline">\(c \rightarrow \infty\)</span>), <span class="math inline">\(\mathrm{A_{min}}\)</span>, which is the minimum absorbance that can be obtained (for <span class="math inline">\(c \rightarrow 0\)</span>), and parameters <span class="math inline">\(\mathrm{EC}_{50}\)</span> and <span class="math inline">\(n\)</span>. The value of <span class="math inline">\(\log \mathrm{EC}_{50}\)</span> is the inflection point of the curve. This means, <span class="math inline">\(\log \mathrm{EC}_{50}\)</span> is the concentration for which we obtain 50% of <span class="math inline">\(\mathrm{A_{max}}\)</span>. Parameter <span class="math inline">\(n\)</span> is related to the steepness of the curve at the inflection point.</p>
+<p>where <span class="math inline">\(\mathrm{A}\)</span> stands for absorbance and <span class="math inline">\(c\)</span> for concentration. The parameters that we are going to estimate are <span class="math inline">\(\mathrm{A_{max}}\)</span>, which is the maximal absorbance that can be obtained (for infinite concentration <span class="math inline">\(c \rightarrow \infty\)</span>), <span class="math inline">\(\mathrm{A_{min}}\)</span>, which is the minimum absorbance that can be obtained (for <span class="math inline">\(c \rightarrow 0\)</span>), and parameters <span class="math inline">\(\mathrm{EC}_{50}\)</span> and <span class="math inline">\(n\)</span>. The value of <span class="math inline">\(\log_2 \mathrm{EC}_{50}\)</span> is the inflection point of the curve. This means, <span class="math inline">\(\log_2 \mathrm{EC}_{50}\)</span> is the concentration for which we obtain 50% of <span class="math inline">\(\mathrm{A_{max}}\)</span>. Parameter <span class="math inline">\(n\)</span> is related to the steepness of the curve at the inflection point.</p>
 <p>For convenience, we use <span class="math inline">\(\log_2\)</span> in the equation (and not <span class="math inline">\(log_{10}\)</span> as often used in literature), because then the estimated <span class="math inline">\(\log_2 EC_{50}\)</span> is easier to interpret, since we performed a 1:2 dilution series to generate the concentrations of our standard. Note that <span class="math inline">\(\log_2(x) = \frac{log_{10}(x)}{log_2(10)} = 0.30103 \cdot \log_{10}(x)\)</span>. Changing the base simply scales all concentration by a constant value (linear transformation).</p>
 </div>
 <div id="regression-of-the-standard" class="section level2">
@@ -237,7 +237,7 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 ## 
 ## Number of iterations to convergence: 7 
 ## Achieved convergence tolerance: 1.49e-08</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Show 95% confidence interval</span></a>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Get 95% confidence interval</span></a>
 <a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">confint</span>(levm.fit)</a></code></pre></div>
 <pre><code>##                2.5%      97.5%
 ## Amax      1.8848732  2.8761359
@@ -301,7 +301,7 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Plot predicted absorbance vs residuals</span></a>
 <a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">plot</span>(levm.fit)</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/tukey-plot-1.png" width="672" /></p>
-<p>Alternatively, one can use the <code>drc</code> package to fit a 4-PL curve using. However, the <code>drm</code> function performs a <span class="math inline">\(\log_10(x)\)</span> transformation by itself, so one get’s results for <span class="math inline">\(\log_10\)</span>-transformed concentrations.</p>
+<p>Alternatively, one can use the <code>drc</code> package to fit a 4-PL curve using. However, the <code>drm</code> function performs a <span class="math inline">\(\log_{10}(x)\)</span> transformation by itself, so one get’s results for <span class="math inline">\(\log_{10}\)</span>-transformed concentrations.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># Fit 4-parameter logistic dose-response curve</span></a>
 <a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co"># Approach 2): Use drc package</span></a>
 <a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co"># </span><span class="al">NOTE</span><span class="co">: the drm function performs a log10(x) transformation by itself.</span></a>
@@ -336,6 +336,7 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 <a class="sourceLine" id="cb30-5" data-line-number="5"><span class="st">  </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb30-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">lwd =</span> <span class="fl">0.2</span>)</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/drc-fit-2.png" width="672" /></p>
+<p>Using the estimated parameters and the 4-PL equation, we can estimate unknown concentrations based on measured absorbance.</p>
 
 </div>
 </div>
