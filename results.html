@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Analyse ELISA data in R</title>
+  <meta name="description" content="Analyse ELISA data in <em>R</em>">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Analyse ELISA data in R" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  <meta name="github-repo" content="janalin/ELISA-analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Analyse ELISA data in R" />
+  
+  
+  
+
+<meta name="author" content="JL">
+
+
+<meta name="date" content="2018-08-26">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="calibration.html">
+<link rel="next" href="overview.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="https://janalin.github.io/analyse-ELISA/">Analyse ELISA data in R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#about-the-experiment-in-brief"><i class="fa fa-check"></i><b>1.1</b> About the experiment in brief</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-fiele"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel fiele</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#set-cell-indices-and-set-experimental-parameteres"><i class="fa fa-check"></i><b>1.3</b> Set cell indices and set experimental parameteres</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="correct-data.html"><a href="correct-data.html"><i class="fa fa-check"></i><b>2</b> Correct data</a></li>
+<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a><ul>
+<li class="chapter" data-level="3.1" data-path="plot-data.html"><a href="plot-data.html#define-plot-theme"><i class="fa fa-check"></i><b>3.1</b> Define plot theme</a></li>
+<li class="chapter" data-level="3.2" data-path="plot-data.html"><a href="plot-data.html#plot-standard"><i class="fa fa-check"></i><b>3.2</b> Plot standard</a></li>
+<li class="chapter" data-level="3.3" data-path="plot-data.html"><a href="plot-data.html#plot-biological-samples"><i class="fa fa-check"></i><b>3.3</b> Plot biological samples</a></li>
+<li class="chapter" data-level="3.4" data-path="plot-data.html"><a href="plot-data.html#combine-plots"><i class="fa fa-check"></i><b>3.4</b> Combine plots</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a><ul>
+<li class="chapter" data-level="4.1" data-path="calibration.html"><a href="calibration.html#the-four-parameter-logistic-curve"><i class="fa fa-check"></i><b>4.1</b> The four-parameter logistic curve</a></li>
+<li class="chapter" data-level="4.2" data-path="calibration.html"><a href="calibration.html#regression-of-the-standard"><i class="fa fa-check"></i><b>4.2</b> Regression of the standard</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#compute-concentrations"><i class="fa fa-check"></i><b>5.1</b> Compute concentrations</a></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#plot-results"><i class="fa fa-check"></i><b>5.2</b> Plot results</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i>Overview</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analyse ELISA data in <em>R</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="results" class="section level1">
+<h1><span class="header-section-number">5</span> Results</h1>
+<div id="compute-concentrations" class="section level2">
+<h2><span class="header-section-number">5.1</span> Compute concentrations</h2>
+<p>Rearranging the 4-PL equation for concentration <span class="math inline">\(c\)</span> gives:</p>
+<p><span class="math display">\[\log_2(c) = \log_2(\mathrm{EC}_{50}) + \dfrac{1}{n} \cdot \ln \left(\dfrac{\mathrm{A_{max} - A_{min}}}{A - \mathrm{A_{min}}} \right) \]</span>.</p>
+<p>We compute the concentrations of our biological samples using the estimated calibration curve and plot the results:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">log2dilution.est &lt;-<span class="st"> </span><span class="kw">sapply</span>(donors<span class="op">$</span>absorbance,</a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">  <span class="cf">function</span>(x)</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3">  log2EC50.est <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>n.est) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>((Amax.est <span class="op">-</span><span class="st"> </span>Amin)<span class="op">/</span>(x <span class="op">-</span><span class="st"> </span>Amin)))</a>
+<a class="sourceLine" id="cb31-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb31-5" data-line-number="5"><span class="co"># Get confidence intervals</span></a>
+<a class="sourceLine" id="cb31-6" data-line-number="6">fgh &lt;-<span class="st"> </span><span class="kw">deriv</span>(</a>
+<a class="sourceLine" id="cb31-7" data-line-number="7">  log2dilution <span class="op">~</span><span class="st"> </span>log2EC50 <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>n) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>((Amax <span class="op">-</span><span class="st"> </span>Amin)<span class="op">/</span>(A <span class="op">-</span><span class="st"> </span>Amin)),</a>
+<a class="sourceLine" id="cb31-8" data-line-number="8">  <span class="kw">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}</a>
+<a class="sourceLine" id="cb31-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb31-10" data-line-number="10">f.new &lt;-<span class="st"> </span><span class="kw">fgh</span>(Amax.est, log2EC50.est, n.est, donors<span class="op">$</span>absorbance)</a>
+<a class="sourceLine" id="cb31-11" data-line-number="11">g.new &lt;-<span class="st"> </span><span class="kw">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</a>
+<a class="sourceLine" id="cb31-12" data-line-number="12">gs &lt;-<span class="st"> </span><span class="kw">rowSums</span>((g.new <span class="op">%*%</span><span class="st"> </span>cov.fit) <span class="op">*</span><span class="st"> </span>g.new)</a>
+<a class="sourceLine" id="cb31-13" data-line-number="13">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></a>
+<a class="sourceLine" id="cb31-14" data-line-number="14">delta.f &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb31-15" data-line-number="15">results &lt;-<span class="st"> </span>donors <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb31-16" data-line-number="16"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2dilution.est =</span> log2dilution.est) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-17" data-line-number="17"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">conf =</span> delta.f)</a>
+<a class="sourceLine" id="cb31-18" data-line-number="18"><span class="co"># Inspect results</span></a>
+<a class="sourceLine" id="cb31-19" data-line-number="19"><span class="kw">head</span>(results)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   donor  time absorbance log2dilution.est  conf
+##   &lt;fct&gt; &lt;int&gt;      &lt;dbl&gt;            &lt;dbl&gt; &lt;dbl&gt;
+## 1 1         0      0.228             6.39 0.334
+## 2 2         0      0.431             7.26 0.214
+## 3 3         0      0.343             6.95 0.250
+## 4 4         0      0.911             8.27 0.207
+## 5 1         7      0.243             6.48 0.320
+## 6 2         7      0.437             7.27 0.212</code></pre>
+</div>
+<div id="plot-results" class="section level2">
+<h2><span class="header-section-number">5.2</span> Plot results</h2>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">plot.results &lt;-<span class="st"> </span><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">    <span class="dt">data =</span> results,</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">    <span class="kw">aes</span>(time, log2dilution.est, <span class="dt">color =</span> donor, <span class="dt">id =</span> donor)</a>
+<a class="sourceLine" id="cb33-4" data-line-number="4">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(time, log2dilution.est), </a>
+<a class="sourceLine" id="cb33-6" data-line-number="6">    <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">lwd =</span> <span class="fl">0.5</span>, <span class="dt">se =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb33-7" data-line-number="7">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-8" data-line-number="8"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb33-9" data-line-number="9">    <span class="dt">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>,</a>
+<a class="sourceLine" id="cb33-10" data-line-number="10">    <span class="dt">y =</span> <span class="kw">bquote</span>(<span class="st">&quot;Estimated &quot;</span> <span class="op">*</span><span class="st"> </span>log[<span class="dv">2</span>] <span class="op">*</span><span class="st"> &quot; HI titer&quot;</span>),</a>
+<a class="sourceLine" id="cb33-11" data-line-number="11">    <span class="dt">title =</span> <span class="st">&quot;Results for IgG ELISA&quot;</span></a>
+<a class="sourceLine" id="cb33-12" data-line-number="12">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-13" data-line-number="13"><span class="st">  </span><span class="kw">scale_color_viridis</span>(</a>
+<a class="sourceLine" id="cb33-14" data-line-number="14">    <span class="dt">begin =</span> <span class="fl">0.2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>, <span class="dt">discrete =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb33-15" data-line-number="15">    <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="kw">seq</span>(n.donors)), <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb33-16" data-line-number="16">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-17" data-line-number="17"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> tpoints) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-18" data-line-number="18"><span class="st">  </span><span class="kw">background_grid</span>(</a>
+<a class="sourceLine" id="cb33-19" data-line-number="19">    <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span></a>
+<a class="sourceLine" id="cb33-20" data-line-number="20">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-21" data-line-number="21"><span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-22" data-line-number="22"><span class="st">  </span><span class="kw">geom_pointrange</span>(</a>
+<a class="sourceLine" id="cb33-23" data-line-number="23">    <span class="kw">aes</span>(<span class="dt">ymin =</span> log2dilution.est <span class="op">-</span><span class="st"> </span>conf, </a>
+<a class="sourceLine" id="cb33-24" data-line-number="24">        <span class="dt">ymax =</span> log2dilution.est <span class="op">+</span><span class="st"> </span>conf), </a>
+<a class="sourceLine" id="cb33-25" data-line-number="25">    <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="fl">0.4</span></a>
+<a class="sourceLine" id="cb33-26" data-line-number="26">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-27" data-line-number="27"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">10</span>)) </a>
+<a class="sourceLine" id="cb33-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb33-29" data-line-number="29">plot.results</a></code></pre></div>
+<p><img src="analyse-ELISA_files/figure-html/plot-results-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="calibration.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="overview.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["analyse-ELISA.pdf", "analyse-ELISA.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
