@@ -52,16 +52,14 @@ theme_plot <- function(
 ## Plot standard
 Now let's plot the standard:
 ```{r, plot-std, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height = 4}
-plot.std <- function(
-  title.hjust = 0, legend.pos = "right", legend.dir = "vertical", semilog = FALSE) {
+plot.std <- function(semilog = FALSE) {
   p <- ggplot(data = standard) +
     scale_color_brewer(
       palette = "Set1",
       labels = paste("Replicate", seq(n.repl.std)),
       guide = guide_legend(title = "")
     ) +
-    scale_y_continuous(
-      limits = c(min.absorb, max.absorb + 0.1 * max.absorb)
+    scale_y_continuous(limits = c(min.absorb, max.absorb + 0.1 * max.absorb)
     ) +
     geom_hline(
       yintercept = mean(blanks$blank),
@@ -69,9 +67,7 @@ plot.std <- function(
       color = "grey60",
       lwd = 0.2
     ) +
-    theme_plot(
-      title.hjust = title.hjust, legend.pos = legend.pos, legend.dir = legend.dir
-    )
+    theme_plot()
 
   if (semilog == TRUE) {
     p <- p + geom_point(aes(log2(dilution), absorbance, color = replicate), alpha = 0.6) +
@@ -121,56 +117,39 @@ plot.std(semilog = TRUE)
 ## Plot biological samples
 Now let's have a look at our actual data. We measured IgG in serum of four donors on five different time points. We first define a plot for our biological samples and then plot it together with the standard curve to have a better overview.
 ```{r, plot-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, chache = TRUE}
-plot.donors <- function(
-  title.hjust = 0, legend.pos = "right", legend.dir = "vertical", semilog = FALSE) {
-  ggplot(
+plot.donors <- ggplot(
     data = donors,
     aes(time, absorbance, color = donor, id = donor)
   ) +
     geom_point(alpha = 0.7) +
     geom_smooth(alpha = 0.5, lwd = 0.5, se = FALSE) +
     labs(
-      x = "Days after vaccination",
-      y = "Absorbance (a. u.)",
+      x = "Days after vaccination", y = "Absorbance (a. u.)",
       title = "IgG in serum of healthy volunteers"
     ) +
     scale_color_viridis(
-      begin = 0.2,
-      end = 0.8,
-      discrete = TRUE,
-      labels = paste("Donor", seq(n.donors)),
-      guide = guide_legend(title = "")
+      begin = 0.2, end = 0.8, discrete = TRUE,
+      labels = paste("Donor", seq(n.donors)), guide = guide_legend(title = "")
     ) +
-    scale_y_continuous(
-      limits = c(min.absorb, max.absorb + 0.1 * max.absorb)
-    ) +
+    scale_y_continuous(limits = c(min.absorb, max.absorb + 0.1 * max.absorb)) +
     scale_x_continuous(breaks = tpoints) +
     geom_hline(
       yintercept = mean(blanks$blank),
-      lty = 2,
-      color = "grey60",
-      lwd = 0.2
+      lty = 2, color = "grey60", lwd = 0.2
     ) +
     annotate("text",
       label = "Blank",
       x = max(donors$time) - 0.1 * max(donors$time),
       y = max(blanks$blank) + 20 * max(blanks$blank),
-      size = 3.5,
-      color = "grey50"
+      size = 3.5, color = "grey50"
     ) +
     background_grid(
-      major = "yx",
-      minor = "",
-      colour.major = "grey90",
-      size.major = 0.2
+      major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
     ) +
-   theme_plot(
-     title.hjust = title.hjust, legend.pos = legend.pos, legend.dir = legend.dir
-    )
-}
+    theme_plot()
 ```
 
 ## Combine plots
 ```{r, plot-grid, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height = 8}
-plot_grid(plot.std(semilog = TRUE), plot.donors(), ncol = 1)
+plot_grid(plot.std(semilog = TRUE), plot.donors, ncol = 1)
 ```

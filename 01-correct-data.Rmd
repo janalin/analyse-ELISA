@@ -114,8 +114,7 @@ donors <- purrr::map_df(
   dplyr::mutate(donor = seq(1, n.donors)) %>%
   dplyr::mutate(donor = factor(donor, unique(donor))) %>%
   tidyr::gather(key = "time", value = "absorbance", -donor) %>%
-  dplyr::mutate(time = as.integer(time)) %>%
-  dplyr::group_by(donor)
+  dplyr::mutate(time = as.integer(time))
 
 # Inspect data
 donors

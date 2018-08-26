@@ -2,7 +2,7 @@
 ## The four-parameter logistic curve
 The relationship between concentration and absorbance can be described by the so called _four-parameter logistic equation (4-PL)_. We will use the following equation:
 
-$$f(c) =  \mathrm{A_{min}} + \frac{\mathrm{A_{max}} - \mathrm{A_{min}}}{1+\exp(\mathrm{n} \cdot (\log_2(c)-\log_2(\mathrm{EC}_{50})))}$$,
+$$A = f(c) =  \mathrm{A_{min}} + \frac{\mathrm{A_{max}} - \mathrm{A_{min}}}{1+\exp(\mathrm{n} \cdot (\log_2(c)-\log_2(\mathrm{EC}_{50})))}$$,
 
 where $\mathrm{A}$ stands for absorbance and $c$ for concentration. The parameters that we are going to estimate are $\mathrm{A_{max}}$, which is the maximal absorbance that can be obtained (for infinite concentration $c \rightarrow \infty$), $\mathrm{A_{min}}$, which is the minimum absorbance that can be obtained (for $c \rightarrow 0$), and parameters $\mathrm{EC}_{50}$ and $n$. The value of $\log \mathrm{EC}_{50}$ is the inflection point of the curve. This means, $\log \mathrm{EC}_{50}$ is the concentration for which we obtain 50% of $\mathrm{A_{max}}$. Parameter $n$ is related to the steepness of the curve at the inflection point. 
 
@@ -42,8 +42,8 @@ confint(levm.fit)
 ## Add calibration curve to plot
 # Save estimated parameters
 Amax.est <- coef(levm.fit)[[1]]
-n.est <- coef(levm.fit)[[2]]
-log2EC50.est <- coef(levm.fit)[[3]]
+log2EC50.est <- coef(levm.fit)[[2]]
+n.est <- coef(levm.fit)[[3]]
 # Full range of considered concentrations
 dilution.new <- seq(2^4, 2^11)
 # Predict new absorbance values from calibration curve
@@ -52,33 +52,51 @@ calibration.curve <- tibble(
   absorbance.est = predict(levm.fit, tibble(dilution = dilution.new))
 )
 
-## Compute prediction intervals
+## Compute prediction and confidence intervals
 # TODO: double-check, ignore this part for now
 fgh <- deriv(
   absorbance ~ Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
-  c("Amax", "n", "log2EC50"), function(Amax, n, log2EC50, dilution) {}
+  c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, dilution) {}
 )
-f.new <- fgh(Amax.est, n.est, log2EC50.est, dilution.new)
+f.new <- fgh(Amax.est, log2EC50.est, n.est, dilution.new)
 g.new <- attr(f.new, "gradient")
 cov.fit <- vcov(levm.fit)
 gs <- rowSums((g.new %*% cov.fit) * g.new)
 alpha <- 0.05
+delta.f <- sqrt(gs) * qt(1 - alpha/2, 15)
 sigma.est <- summary(levm.fit)$sigma
 delta.y <- sqrt(gs + sigma.est^2) * qt(1 - alpha / 2, 15)
 calibration.curve <- calibration.curve %>%
   dplyr::mutate(pred.lwr = absorbance.est - delta.y) %>%
-  dplyr::mutate(pred.upr = absorbance.est + delta.y)
+  dplyr::mutate(pred.upr = absorbance.est + delta.y) %>%
+  dplyr::mutate(conf.lwr = absorbance.est - delta.f) %>%
+  dplyr::mutate(conf.upr = absorbance.est + delta.f)
 
 ## Plot calibration curve
 plot.ccurve <- plot.std(semilog = TRUE) +
-  geom_line(data = calibration.curve,
-    aes(log2(dilution.new), absorbance.est), alpha = 0.6) + 
-  geom_ribbon(data = calibration.curve,
+  geom_line(
+    data = calibration.curve,
+    aes(log2(dilution.new), absorbance.est), alpha = 0.8
+  ) +
+  geom_ribbon(
+    data = calibration.curve,
     aes(x = log2(dilution.new), ymin = pred.lwr, ymax = pred.upr),
-    alpha = 0.2, fill = "grey") +
-  scale_y_continuous(limits = c(-0.1, 2))
-plot.ccurve
+    alpha = 0.2, fill = "grey"
+  ) +
+  geom_ribbon(
+    data = calibration.curve,
+    aes(x = log2(dilution.new), ymin = conf.lwr, ymax = conf.upr),
+    alpha = 0.1, fill = NA, color = "grey70", lty = 3
+  ) +
+  scale_y_continuous(limits = c(-0.3, 2))
 
+# TODO: Add ribbon and dashed line to legend
+plot.ccurve
+```
+
+The grey band shows the prediction interval and the dashed line the confidence interval (both for 95%).
+
+```{r, tukey-plot, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=4}
 # Plot predicted absorbance vs residuals
 plot(levm.fit)
 ```

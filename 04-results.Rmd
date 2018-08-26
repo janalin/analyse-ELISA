@@ -1,0 +1,61 @@
+# Results {#results}
+## Compute concentrations
+Rearranging the 4-PL equation for concentration $c$ gives:
+
+$$\log_2(c) = \log_2(\mathrm{EC}_{50}) + \dfrac{1}{n} \cdot \ln \left(\dfrac{\mathrm{A_{max} - A_{min}}}{A - \mathrm{A_{min}}} \right) $$.
+
+We compute the concentrations of our biological samples using the estimated calibration curve and plot the results:
+```{r, results, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
+log2dilution.est <- sapply(donors$absorbance,
+  function(x)
+  log2EC50.est + (1/n.est) * log((Amax.est - Amin)/(x - Amin)))
+
+# Get confidence intervals
+fgh <- deriv(
+  log2dilution ~ log2EC50 + (1/n) * log((Amax - Amin)/(A - Amin)),
+  c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, A) {}
+)
+f.new <- fgh(Amax.est, log2EC50.est, n.est, donors$absorbance)
+g.new <- attr(f.new, "gradient")
+gs <- rowSums((g.new %*% cov.fit) * g.new)
+alpha <- 0.05
+delta.f <- sqrt(gs) * qt(1 - alpha/2, 15)
+results <- donors %>% 
+  dplyr::mutate(log2dilution.est = log2dilution.est) %>%
+  dplyr::mutate(conf = delta.f)
+# Inspect results
+head(results)
+```
+
+## Plot results
+```{r, plot-results, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=4, cache = TRUE}
+plot.results <- ggplot(
+    data = results,
+    aes(time, log2dilution.est, color = donor, id = donor)
+  ) +
+  geom_smooth(aes(time, log2dilution.est), 
+    alpha = 0.5, lwd = 0.5, se = FALSE
+  ) +
+  labs(
+    x = "Days after vaccination",
+    y = bquote("Estimated " * log[2] * " HI titer"),
+    title = "Results for IgG ELISA"
+  ) +
+  scale_color_viridis(
+    begin = 0.2, end = 0.8, discrete = TRUE,
+    labels = paste("Donor", seq(n.donors)), guide = guide_legend(title = "")
+  ) +
+  scale_x_continuous(breaks = tpoints) +
+  background_grid(
+    major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
+  ) +
+  theme_plot() +
+  geom_pointrange(
+    aes(ymin = log2dilution.est - conf, 
+        ymax = log2dilution.est + conf), 
+    shape = 21, size = 0.4
+  ) +
+  scale_y_continuous(limits = c(4, 10)) 
+
+plot.results
+```
