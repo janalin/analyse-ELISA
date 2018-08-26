@@ -4,7 +4,7 @@ The relationship between concentration and absorbance can be described by the so
 
 $$A = f(c) =  \mathrm{A_{min}} + \frac{\mathrm{A_{max}} - \mathrm{A_{min}}}{1+\exp(\mathrm{n} \cdot (\log_2(c)-\log_2(\mathrm{EC}_{50})))}$$,
 
-where $\mathrm{A}$ stands for absorbance and $c$ for concentration. The parameters that we are going to estimate are $\mathrm{A_{max}}$, which is the maximal absorbance that can be obtained (for infinite concentration $c \rightarrow \infty$), $\mathrm{A_{min}}$, which is the minimum absorbance that can be obtained (for $c \rightarrow 0$), and parameters $\mathrm{EC}_{50}$ and $n$. The value of $\log \mathrm{EC}_{50}$ is the inflection point of the curve. This means, $\log \mathrm{EC}_{50}$ is the concentration for which we obtain 50% of $\mathrm{A_{max}}$. Parameter $n$ is related to the steepness of the curve at the inflection point. 
+where $\mathrm{A}$ stands for absorbance and $c$ for concentration. The parameters that we are going to estimate are $\mathrm{A_{max}}$, which is the maximal absorbance that can be obtained (for infinite concentration $c \rightarrow \infty$), $\mathrm{A_{min}}$, which is the minimum absorbance that can be obtained (for $c \rightarrow 0$), and parameters $\mathrm{EC}_{50}$ and $n$. The value of $\log_2 \mathrm{EC}_{50}$ is the inflection point of the curve. This means, $\log_2 \mathrm{EC}_{50}$ is the concentration for which we obtain 50% of $\mathrm{A_{max}}$. Parameter $n$ is related to the steepness of the curve at the inflection point. 
 
 For convenience, we use $\log_2$ in the equation (and not $log_{10}$ as often used in literature), because then the estimated $\log_2 EC_{50}$ is easier to interpret, since we performed a 1:2 dilution series to generate the concentrations of our standard. Note that $\log_2(x) = \frac{log_{10}(x)}{log_2(10)} = 0.30103 \cdot \log_{10}(x)$. Changing the base simply scales all concentration by a constant value (linear transformation).
 
@@ -37,7 +37,7 @@ levm.fit <- nlsLM(
 )
 # Check new fit results
 summary(levm.fit)
-# Show 95% confidence interval
+# Get 95% confidence interval
 confint(levm.fit)
 ## Add calibration curve to plot
 # Save estimated parameters
@@ -101,7 +101,7 @@ The grey band shows the prediction interval and the dashed line the confidence i
 plot(levm.fit)
 ```
 
-Alternatively, one can use the `drc` package to fit a 4-PL curve using. However, the `drm` function performs a $\log_10(x)$ transformation by itself, so one get's results for $\log_10$-transformed concentrations.
+Alternatively, one can use the `drc` package to fit a 4-PL curve using. However, the `drm` function performs a $\log_{10}(x)$ transformation by itself, so one get's results for $\log_{10}$-transformed concentrations.
 ```{r, drc-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
 # Fit 4-parameter logistic dose-response curve
 # Approach 2): Use drc package
@@ -121,6 +121,6 @@ ggplot(as.tibble(drc.fit$predres)) +
   geom_hline(yintercept = 0, lwd = 0.2)
 ```
 
-
+Using the estimated parameters and the 4-PL equation, we can estimate the amount of IgG from the measured absorbance (in our case, we can only estimate a relative concentration).
   
   

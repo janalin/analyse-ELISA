@@ -55,7 +55,7 @@ data[,1:2]
 ```
 
 ## Set cell indices and set experimental parameteres
-We need to specify some experiment-specific parameters manually such the location of the standard samples and blanks, the number of replicates, etc. 
+We need to specify some experiment-specific parameters manually such as the position of the wells with the standard samples and blanks, the number of replicates, etc. 
 ```{r, select-cells, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
 # Use View(data) to double-check row and column indices
 

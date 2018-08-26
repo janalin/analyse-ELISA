@@ -1,5 +1,5 @@
 # Plot data {#plot-data}
-For convience, we define a plot theme that suits our taste:
+For convenience, we first define a plot theme:
 
 ## Define plot theme
 ```{r, plot-theme, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}

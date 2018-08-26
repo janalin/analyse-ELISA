@@ -1,5 +1,5 @@
 # Correct data {#correct-data}
-First, we define functions to 1) get background-corrected values of our samples, 2) compute the standard concentrations, and 3) to get tidy data frames of the standard and and the biological samples.
+First, we define functions to 1) get background-corrected values of our samples, 2) compute the standard concentrations, and 3) to get tidy data frames of the standard and the biological samples.
 ```{r, corr-data, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 # Gets samples, performs background correction
 # Works only on single rows of the 96-well plate
