@@ -9,37 +9,100 @@ where $\mathrm{A}$ stands for absorbance and $c$ for concentration. The paramete
 For convenience, we use $\log_2$ in the equation (and not $log_{10}$ as often used in literature), because then the estimated $\log_2 EC_{50}$ is easier to interpret, since we performed a 1:2 dilution series to generate the concentrations of our standard. Note that $\log_2(x) = \frac{log_{10}(x)}{log_2(10)} = 0.30103 \cdot \log_{10}(x)$. Changing the base simply scales all concentration by a constant value (linear transformation).
 
 ## Regression of the standard
-We fit the data obtained for the standard to the four-parameter logistic curve:
-```{r, regress-std, echo = TRUE, eval = F, warning = FALSE, message = FALSE}
-# Fit 4-parameter logistic dose-response curve using the drc package
-# NOTE: the drm function performs a log10(x) transformation by itself.
-# See also ?LL2.4 for more information
-drc.fit <- drm(absorbance ~ dilution, 
-               data = standard, 
-               fct = LL2.4(names=c("n", "Amin", "Amax", "EC50")))
-drc.fit <- drm(absorbance ~ dilution, data = standard, fct = LL2.4(fixed = c(NA, median(blanks$blank), NA, NA), names=c("n", "Amin", "Amax", "EC50")))
-summary(drc.fit)
-plot(drc.fit)
-# Check residuals
-qplot(as.tibble(drc.fit$predres)$`Predicted values`, as.tibble(drc.fit$predres)$Residuals)
+We fit the data obtained for the standard to the four-parameter logistic curve. This is a non-linear least squares problem and we use the  Levenberg-Marquadt algorithm to solve it. 
+The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorithm (used by default by the `nls()` function of the `nls` package), which means it converges to a minimum even if the initial starting values are far from the final minimum. 
+```{r, test-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
+# Fit 4-parameter logistic dose-response curve
+# Approach 1): Use nlsLM pacakge for Levenberg-Marquardt optimization
+levm.fit <- nlsLM(
+  absorbance ~
+  Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
+  data = standard,
+  start = list(Amin = 0, Amax = 2, log2EC50 = 8, n = -1)
+)
+# Show summary of the fit
+summary(levm.fit)
+```
+Apparently, we can not estimate $\mathrm{A_{min}}$ from the data. But we can fix it to a certain value: we know that $\mathrm{A_{min}}$ can not be negative and we can use the values obtained from the blank wells as an estimate for $\mathrm{A_{min}}$.
 
-# Compare to nls fit
-nls.fit <- nls(absorbance ~ 0.003 + ((Amax - 0.003)/(1 + exp(n * (log2(dilution) - log2EC50)))), 
-                data = standard,
-                start = list(Amax = 2, log2EC50 = 9, n = -1))
- summary(nls.fit)
- plot(nls.fit)
+```{r, lm-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=4}
+# Set Amin to blank values
+Amin <- median(blanks$blank)
+# Re-fit with only three free parameters
+levm.fit <- nlsLM(
+  absorbance ~
+  Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
+  data = standard,
+  start = list(Amax = 2, log2EC50 = 8, n = -1)
+)
+# Check new fit results
+summary(levm.fit)
+# Show 95% confidence interval
+confint(levm.fit)
+## Add calibration curve to plot
+# Save estimated parameters
+Amax.est <- coef(levm.fit)[[1]]
+n.est <- coef(levm.fit)[[2]]
+log2EC50.est <- coef(levm.fit)[[3]]
+# Full range of considered concentrations
+dilution.new <- seq(2^4, 2^11)
+# Predict new absorbance values from calibration curve
+calibration.curve <- tibble(
+  dilution.new = dilution.new,
+  absorbance.est = predict(levm.fit, tibble(dilution = dilution.new))
+)
 
-# Compare to Levenber-Marquardt fit
-levm.fit = nlsLM(absorbance ~ 0.003 + ((Amax - 0.003)/(1 + exp(n * (log2(dilution) - log2EC50)))), data = standard,start = list(Amax = 2, log2EC50 = 9, n = -1))
-lefm.sum <- summary(levm.fit)
-predict(levm.fit)
+## Compute prediction intervals
+# TODO: double-check, ignore this part for now
+fgh <- deriv(
+  absorbance ~ Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
+  c("Amax", "n", "log2EC50"), function(Amax, n, log2EC50, dilution) {}
+)
+f.new <- fgh(Amax.est, n.est, log2EC50.est, dilution.new)
+g.new <- attr(f.new, "gradient")
+cov.fit <- vcov(levm.fit)
+gs <- rowSums((g.new %*% cov.fit) * g.new)
+alpha <- 0.05
+sigma.est <- summary(levm.fit)$sigma
+delta.y <- sqrt(gs + sigma.est^2) * qt(1 - alpha / 2, 15)
+calibration.curve <- calibration.curve %>%
+  dplyr::mutate(pred.lwr = absorbance.est - delta.y) %>%
+  dplyr::mutate(pred.upr = absorbance.est + delta.y)
 
+## Plot calibration curve
+plot.ccurve <- plot.std(semilog = TRUE) +
+  geom_line(data = calibration.curve,
+    aes(log2(dilution.new), absorbance.est), alpha = 0.6) + 
+  geom_ribbon(data = calibration.curve,
+    aes(x = log2(dilution.new), ymin = pred.lwr, ymax = pred.upr),
+    alpha = 0.2, fill = "grey") +
+  scale_y_continuous(limits = c(-0.1, 2))
+plot.ccurve
+
+# Plot predicted absorbance vs residuals
 plot(levm.fit)
-
-# TODO:
-#make table with estimates
-#plot predictions in one plot
 ```
 
-## Summary 
+Alternatively, one can use the `drc` package to fit a 4-PL curve using. However, the `drm` function performs a $\log_10(x)$ transformation by itself, so one get's results for $\log_10$-transformed concentrations.
+```{r, drc-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
+# Fit 4-parameter logistic dose-response curve
+# Approach 2): Use drc package
+# NOTE: the drm function performs a log10(x) transformation by itself.
+# See also ?LL2.4 for more information
+drc.fit <- drm(absorbance ~ dilution,
+  data = standard,
+  fct = LL2.4(names = c("n", "Amin", "Amax", "EC50"))
+)
+summary(drc.fit)
+plot(drc.fit)
+ggplot(as.tibble(drc.fit$predres)) +
+  geom_point(aes(`Predicted values`, Residuals),
+    pch = 1, size = 3, color = "cornflowerblue") +
+  theme_plot() + 
+  panel_border() + 
+  geom_hline(yintercept = 0, lwd = 0.2)
+```
+
+
+  
+  
