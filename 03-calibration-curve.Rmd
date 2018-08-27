@@ -107,11 +107,11 @@ The grey band shows the prediction interval and the dashed line the confidence i
 plot(levm.fit)
 ```
 
-Alternatively, one can use the `drc` package to fit a 4-PL curve using. However, the `drm` function performs a $\log_{10}(x)$ transformation by itself, so one get's results for $\log_{10}$-transformed concentrations.
+Alternatively, one can use the `drc` package to fit a 4-PL curve using. However, the `drm` function performs a $\ln$ transformation of the independent variable by itself. So in this case, the results are for $\ln$-transformed concentrations:
 ```{r, drc-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
 # Fit 4-parameter logistic dose-response curve
 # Approach 2): Use drc package
-# NOTE: the drm function performs a log10(x) transformation by itself.
+# NOTE: the drm function performs a ln(x) transformation by itself.
 # See also ?LL2.4 for more information
 drc.fit <- drm(absorbance ~ concentration,
   data = standard,

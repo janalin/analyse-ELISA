@@ -307,10 +307,10 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Plot predicted absorbance vs residuals</span></a>
 <a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">plot</span>(levm.fit)</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/tukey-plot-1.png" width="672" /></p>
-<p>Alternatively, one can use the <code>drc</code> package to fit a 4-PL curve using. However, the <code>drm</code> function performs a <span class="math inline">\(\log_{10}(x)\)</span> transformation by itself, so one get’s results for <span class="math inline">\(\log_{10}\)</span>-transformed concentrations.</p>
+<p>Alternatively, one can use the <code>drc</code> package to fit a 4-PL curve using. However, the <code>drm</code> function performs a <span class="math inline">\(\ln\)</span> transformation of the independent variable by itself. So in this case, the results are for <span class="math inline">\(\ln\)</span>-transformed concentrations:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># Fit 4-parameter logistic dose-response curve</span></a>
 <a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co"># Approach 2): Use drc package</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co"># </span><span class="al">NOTE</span><span class="co">: the drm function performs a log10(x) transformation by itself.</span></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co"># </span><span class="al">NOTE</span><span class="co">: the drm function performs a ln(x) transformation by itself.</span></a>
 <a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co"># See also ?LL2.4 for more information</span></a>
 <a class="sourceLine" id="cb27-5" data-line-number="5">drc.fit &lt;-<span class="st"> </span><span class="kw">drm</span>(absorbance <span class="op">~</span><span class="st"> </span>concentration,</a>
 <a class="sourceLine" id="cb27-6" data-line-number="6">  <span class="dt">data =</span> standard,</a>
