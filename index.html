@@ -25,7 +25,7 @@
 <meta name="author" content="JL">
 
 
-<meta name="date" content="2018-08-26">
+<meta name="date" content="2018-08-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -172,14 +172,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Analyse ELISA data in <em>R</em></h1>
 <h4 class="author"><em>JL</em></h4>
-<h4 class="date"><em>2018-08-26</em></h4>
+<h4 class="date"><em>2018-08-27</em></h4>
 </div>
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>This document shows how to analyse ELISA data in <em>R</em>. The code was written to analyse ELISA experiments performed in our lab: the script reads the excel file provided by a <em>Synergy H1</em> 96-well plate reader from BioTek, performs a background-correction, generates the calibration curve and computes the sample concentrations with respect to this calibration curve.</p>
 <div id="about-the-experiment-in-brief" class="section level2">
 <h2><span class="header-section-number">1.1</span> About the experiment in brief</h2>
-<p>We measured the IgG amount in blood serum of four donors using an <em>indirect ELISA</em>. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm – to measure the substrate specific absorbance – and at 620 nm – to measer the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.</p>
+<p>We measured the IgG amount in blood serum of four donors using an <em>indirect ELISA</em>. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm – to measure the substrate specific absorbance – and at 620 nm – to measure the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.</p>
 </div>
 <div id="load-libraries-and-import-excel-fiele" class="section level2">
 <h2><span class="header-section-number">1.2</span> Load libraries and import excel fiele</h2>
@@ -190,11 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-4" data-line-number="4">pacman<span class="op">::</span><span class="kw">p_load</span>(bookdown, <span class="co"># to create this document</span></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5">               tidyverse, <span class="co"># for data wrangling</span></a>
 <a class="sourceLine" id="cb1-6" data-line-number="6">               ggplot2, cowplot, <span class="co"># for nice plots</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">               gdata, <span class="co"># to read excel files</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">               here, <span class="co"># to find the absolute path of the project</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">               purrr, <span class="co"># for functional programming</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">               viridis, <span class="co"># for color palettes</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">               drc, minpack.lm) <span class="co"># for 4-param logistic regression</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-7" data-line-number="7">               scales, <span class="co"># for axis scales with &#39;%&#39;</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">               gdata, <span class="co"># to read excel files</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">               here, <span class="co"># to find the absolute path of the project</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">               purrr, <span class="co"># for functional programming</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">               viridis, <span class="co"># for color palettes</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">               drc, minpack.lm) <span class="co"># for 4-param logistic regression</span></a></code></pre></div>
 <p>Now we read the excel file:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Get the project path</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">path &lt;-<span class="st"> </span>here<span class="op">::</span><span class="kw">here</span>()</a>
@@ -251,7 +252,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co"># Number of replicates of the standard</span></a>
 <a class="sourceLine" id="cb6-14" data-line-number="14">n.repl.std &lt;-<span class="st"> </span><span class="dv">2</span></a>
 <a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co"># Maximal concentration of the standard </span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">max.conc.std &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">^</span><span class="dv">11</span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">max.conc.std &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># i.e. 100 %, we use a relative scale</span></a>
 <a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co"># Number of dilutions performed to obtain the calibration curve</span></a>
 <a class="sourceLine" id="cb6-18" data-line-number="18">n.dilutions &lt;-<span class="st"> </span><span class="dv">8</span></a>
 <a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co"># Dilution factor</span></a>
@@ -263,7 +264,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-25" data-line-number="25">col.idx.donor<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">5</span></a>
 <a class="sourceLine" id="cb6-26" data-line-number="26">n.donors &lt;-<span class="st"> </span><span class="dv">4</span></a>
 <a class="sourceLine" id="cb6-27" data-line-number="27">tpoints &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">180</span>)</a>
-<a class="sourceLine" id="cb6-28" data-line-number="28">n.repl.donors &lt;-<span class="st"> </span><span class="dv">1</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-28" data-line-number="28">n.repl.donors &lt;-<span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <p>Now we can start analysing the data.</p>
 
 </div>

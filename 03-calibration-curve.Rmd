@@ -14,11 +14,12 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 ```{r, test-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
 # Fit 4-parameter logistic dose-response curve
 # Approach 1): Use nlsLM pacakge for Levenberg-Marquardt optimization
+standard <- standard %>% dplyr::mutate(log2concentration = log2(concentration))
 levm.fit <- nlsLM(
   absorbance ~
-  Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
+  Amin + ((Amax - Amin) / (1 + exp(n * (log2concentration - log2EC50)))),
   data = standard,
-  start = list(Amin = 0, Amax = 2, log2EC50 = 8, n = -1)
+  start = list(Amin = 0, Amax = 2, log2EC50 = 0.5, n = -1)
 )
 # Show summary of the fit
 summary(levm.fit)
@@ -31,9 +32,9 @@ Amin <- median(blanks$blank)
 # Re-fit with only three free parameters
 levm.fit <- nlsLM(
   absorbance ~
-  Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
+  Amin + ((Amax - Amin) / (1 + exp(n * (log2concentration - log2EC50)))),
   data = standard,
-  start = list(Amax = 2, log2EC50 = 8, n = -1)
+  start = list(Amax = 2, log2EC50 = 0.5, n = -1)
 )
 # Check new fit results
 summary(levm.fit)
@@ -45,20 +46,22 @@ Amax.est <- coef(levm.fit)[[1]]
 log2EC50.est <- coef(levm.fit)[[2]]
 n.est <- coef(levm.fit)[[3]]
 # Full range of considered concentrations
-dilution.new <- seq(2^4, 2^11)
+log2concentration.new <- log2(seq(0.008, 1, by = 0.001))
 # Predict new absorbance values from calibration curve
 calibration.curve <- tibble(
-  dilution.new = dilution.new,
-  absorbance.est = predict(levm.fit, tibble(dilution = dilution.new))
+  concentration.new = 2^log2concentration.new,
+  log2concentration.new = log2concentration.new,
+  absorbance.est = predict(levm.fit, tibble(log2concentration = log2concentration.new))
 )
 
 ## Compute prediction and confidence intervals
 # TODO: double-check, ignore this part for now
 fgh <- deriv(
-  absorbance ~ Amin + ((Amax - Amin)) / (1 + exp(n * (log2(dilution) - log2EC50))),
-  c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, dilution) {}
+  absorbance ~
+  Amin + ((Amax - Amin) / (1 + exp(n * (log2concentration - log2EC50)))),
+  c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, log2concentration) {}
 )
-f.new <- fgh(Amax.est, log2EC50.est, n.est, dilution.new)
+f.new <- fgh(Amax.est, log2EC50.est, n.est, log2concentration.new)
 g.new <- attr(f.new, "gradient")
 cov.fit <- vcov(levm.fit)
 gs <- rowSums((g.new %*% cov.fit) * g.new)
@@ -76,19 +79,22 @@ calibration.curve <- calibration.curve %>%
 plot.ccurve <- plot.std(semilog = TRUE) +
   geom_line(
     data = calibration.curve,
-    aes(log2(dilution.new), absorbance.est), alpha = 0.8
+    aes(concentration.new, absorbance.est), alpha = 0.8
   ) +
   geom_ribbon(
     data = calibration.curve,
-    aes(x = log2(dilution.new), ymin = pred.lwr, ymax = pred.upr),
+    aes(x = concentration.new, ymin = pred.lwr, ymax = pred.upr),
     alpha = 0.2, fill = "grey"
   ) +
   geom_ribbon(
     data = calibration.curve,
-    aes(x = log2(dilution.new), ymin = conf.lwr, ymax = conf.upr),
+    aes(x = concentration.new, 
+        ymin = conf.lwr, 
+        ymax = conf.upr),
     alpha = 0.1, fill = NA, color = "grey70", lty = 3
   ) +
   scale_y_continuous(limits = c(-0.3, 2))
+
 
 # TODO: Add ribbon and dashed line to legend
 plot.ccurve
@@ -107,7 +113,7 @@ Alternatively, one can use the `drc` package to fit a 4-PL curve using. However,
 # Approach 2): Use drc package
 # NOTE: the drm function performs a log10(x) transformation by itself.
 # See also ?LL2.4 for more information
-drc.fit <- drm(absorbance ~ dilution,
+drc.fit <- drm(absorbance ~ concentration,
   data = standard,
   fct = LL2.4(names = c("n", "Amin", "Amax", "EC50"))
 )

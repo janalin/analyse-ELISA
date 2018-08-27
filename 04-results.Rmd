@@ -6,23 +6,27 @@ $$\log_2(c) = \log_2(\mathrm{EC}_{50}) + \dfrac{1}{n} \cdot \ln \left(\dfrac{\ma
 
 We compute the concentrations of our biological samples using the estimated calibration curve and plot the results:
 ```{r, results, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
-log2dilution.est <- sapply(donors$absorbance,
+
+log2concentration.est <- sapply(donors.av$absorbance.av,
   function(x)
   log2EC50.est + (1/n.est) * log((Amax.est - Amin)/(x - Amin)))
 
+
 # Get confidence intervals
 fgh <- deriv(
-  log2dilution ~ log2EC50 + (1/n) * log((Amax - Amin)/(A - Amin)),
+  log2concentration ~ log2EC50 + (1/n) * log((Amax - Amin)/(A - Amin)),
   c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, A) {}
 )
-f.new <- fgh(Amax.est, log2EC50.est, n.est, donors$absorbance)
+f.new <- fgh(Amax.est, log2EC50.est, n.est, donors.av$absorbance.av)
 g.new <- attr(f.new, "gradient")
 gs <- rowSums((g.new %*% cov.fit) * g.new)
 alpha <- 0.05
 delta.f <- sqrt(gs) * qt(1 - alpha/2, 15)
-results <- donors %>% 
-  dplyr::mutate(log2dilution.est = log2dilution.est) %>%
-  dplyr::mutate(conf = delta.f)
+results <- donors.av %>% 
+  dplyr::mutate(concentration.est = 2^log2concentration.est) %>%
+  dplyr::mutate(log2concentration.est = log2concentration.est) %>%
+  dplyr::mutate(log2conf = delta.f) 
+
 # Inspect results
 head(results)
 ```
@@ -31,15 +35,15 @@ head(results)
 ```{r, plot-results, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=4, cache = TRUE}
 plot.results <- ggplot(
     data = results,
-    aes(time, log2dilution.est, color = donor, id = donor)
+    aes(time, concentration.est, color = donor)
   ) +
-  geom_smooth(aes(time, log2dilution.est), 
-    alpha = 0.5, lwd = 0.5, se = FALSE
+  geom_line(aes(time, concentration.est, group = donor), 
+    alpha = 0.6, lwd = 0.5
   ) +
   labs(
     x = "Days after vaccination",
-    y = bquote("Estimated " * log[2] * " HI titer"),
-    title = "Results for IgG ELISA"
+    y = "Relative concentration",
+    title = "IgG in healthy volunteers"
   ) +
   scale_color_viridis(
     begin = 0.2, end = 0.8, discrete = TRUE,
@@ -51,11 +55,11 @@ plot.results <- ggplot(
   ) +
   theme_plot() +
   geom_pointrange(
-    aes(ymin = log2dilution.est - conf, 
-        ymax = log2dilution.est + conf), 
+    aes(ymin = concentration.est / 2^log2conf, 
+        ymax = concentration.est * 2^log2conf), 
     shape = 21, size = 0.4
   ) +
-  scale_y_continuous(limits = c(4, 10)) 
+  scale_y_continuous(labels = scales::percent)
 
 plot.results
 ```

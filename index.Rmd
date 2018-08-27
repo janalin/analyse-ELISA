@@ -16,7 +16,7 @@ description: ""
 This document shows how to analyse ELISA data in _R_. The code was written to analyse ELISA experiments performed in our lab: the script reads the excel file provided by a _Synergy H1_ 96-well plate reader from BioTek, performs a background-correction, generates the calibration curve and computes the sample concentrations with respect to this calibration curve.
 
 ## About the experiment in brief
-We measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm -- to measure the substrate specific absorbance -- and at 620 nm -- to measer the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.
+We measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm -- to measure the substrate specific absorbance -- and at 620 nm -- to measure the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.
 
 ## Load libraries and import excel fiele
 We first load some _R_ libraries that we want to use.
@@ -27,6 +27,7 @@ if (!requireNamespace("pacman", quietly = TRUE)){
 pacman::p_load(bookdown, # to create this document
                tidyverse, # for data wrangling
                ggplot2, cowplot, # for nice plots
+               scales, # for axis scales with '%'
                gdata, # to read excel files
                here, # to find the absolute path of the project
                purrr, # for functional programming
@@ -72,7 +73,7 @@ col.idx.std <- 3
 # Number of replicates of the standard
 n.repl.std <- 2
 # Maximal concentration of the standard 
-max.conc.std <- 2^11
+max.conc.std <- 1 # i.e. 100 %, we use a relative scale
 # Number of dilutions performed to obtain the calibration curve
 n.dilutions <- 8
 # Dilution factor
@@ -84,7 +85,7 @@ row.idx.donor.1 <- 22
 col.idx.donor.1 <- 5
 n.donors <- 4
 tpoints <- c(0, 7, 30, 60, 180)
-n.repl.donors <- 1
+n.repl.donors <- 2
 ```
 
 Now we can start analysing the data.

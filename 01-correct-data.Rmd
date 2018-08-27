@@ -23,8 +23,10 @@ correct.sample <- function(data, row.idx, col.idx, n.cols) {
 #' @param n.dilutions number of dilutions performed
 #' @param dilution.fact dilution factor
 #' @return a vector with concentrations
-comp.dilutions <- function(
-  max.conc.std = max.conc.std, n.dilutions = n.dilutions, dilution.fact = dilution.fact) {
+comp.conc <- function(
+  max.conc.std = max.conc.std, 
+  n.dilutions = n.dilutions, 
+  dilution.fact = dilution.fact) {
   dilutions <- sapply(
     seq(0, (n.dilutions - 1)),
     function(x) max.conc.std / (dilution.fact^x)
@@ -41,7 +43,7 @@ get.standard <- function(data = data,
                          n.repl = n.repl,
                          dilution.fact = dilution.fact,
                          max.conc.std = max.conc.std, 
-                         dilutions = dilutions) {
+                         concentration = concentrations) {
   row.end <- row.idx + (n.dilutions * 2) - 1
   col.end <- col.idx + (n.repl - 1)
   standard <- data %>% .[row.idx:row.end, col.idx:col.end]
@@ -51,8 +53,8 @@ get.standard <- function(data = data,
   ) %>%
     na.omit() %>%
     setNames(seq(n.repl)) %>%
-    dplyr::mutate(dilution = dilutions) %>%
-    tidyr::gather(key = replicate, value = absorbance, -dilution)
+    dplyr::mutate(concentration = concentrations) %>%
+    tidyr::gather(key = replicate, value = absorbance, -concentration)
 
   return(corr.standard)
 }
@@ -60,21 +62,20 @@ get.standard <- function(data = data,
 # TODO: add documentation
 get.donors <- function(row.idx = row.idx.donor.1,
                        col.idx = col.idx.donor.1,
-                       n.cols = length(tpoints),
-                       n.repl = n.repl.donors) {
-  row.end <- row.idx + 1 + 2 * (n.repl.donors - 1) # here, replicates are performed row-wise
+                       n.cols = n.repl.donors * length(tpoints)) {
+  row.end <- row.idx + 1 # 450 nm and 620 nm
   col.end <- col.idx + (n.cols - 1)
   sample <- data %>% .[row.idx:row.end, col.idx:col.end]
   corr.donors <- correct.sample(
-    data = sample, row.idx = 1, col.idx = 1, n.cols = length(tpoints)
+    data = sample, row.idx = 1, col.idx = 1, n.cols = n.cols
   )
   return(corr.donors)
-}
+} 
 ```
 
 Now we can create a data frame with the corrected data of the standard:
 ```{r, get-standard, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
-dilutions <- comp.dilutions(
+concentrations <- comp.conc(
   max.conc.std = max.conc.std,
   n.dilutions = n.dilutions,
   dilution.fact = dilution.fact
@@ -88,7 +89,7 @@ standard <- get.standard(
   n.repl = n.repl.std,
   dilution.fact = dilution.fact,
   max.conc.std = max.conc.std, 
-  dilutions = dilutions
+  concentration = concentrations
 )
 # Inspect result
 standard
@@ -108,16 +109,21 @@ And finally we create a data frame with the corrected data of our biological sam
 ```{r, select-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 donors <- purrr::map_df(
   seq(row.idx.donor.1, (row.idx.donor.1 + 2 * (n.donors - 1)), by = 2),
-  ~ get.donors(., col.idx = col.idx.donor.1, n.cols = length(tpoints), n.repl = n.repl.donors)
+  ~ get.donors(., col.idx = col.idx.donor.1, n.cols = 10)
 ) %>%
-  setNames(tpoints) %>%
+  setNames(c(0.1,0.2,7.1,7.2,30.1,30.2,60.1, 60.2, 180.1, 180.2)) %>%
   dplyr::mutate(donor = seq(1, n.donors)) %>%
   dplyr::mutate(donor = factor(donor, unique(donor))) %>%
   tidyr::gather(key = "time", value = "absorbance", -donor) %>%
-  dplyr::mutate(time = as.integer(time))
+  tidyr::separate(time, c("time", "replicate")) %>%
+  dplyr::mutate(time = as.integer(time)) %>%
+  dplyr::group_by(donor, time)
+donors.av <- donors %>% 
+  dplyr::summarise(absorbance.av = mean(absorbance)) %>%
+  dplyr::ungroup()
 
 # Inspect data
-donors
+donors.av
 ```
 
 Before we proceed with the analysis, let's plot the data and see whether it looks reasonable. 
