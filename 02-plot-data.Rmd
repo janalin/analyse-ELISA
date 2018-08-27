@@ -5,7 +5,7 @@ For convenience, we first define a plot theme:
 ```{r, plot-theme, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
 min.absorb <- min(blanks$blank)
 max.absorb <- max(standard$absorbance)
-font.size <- 12
+font.size <- 11
 # Define theme for plotting
 #' @param title.hjust horizontal alignment of plot title
 #' @param legend_pos legend position
@@ -73,7 +73,7 @@ plot.std <- function(semilog = FALSE) {
   if (semilog == TRUE) {
     p <- p + geom_point(aes(concentration, absorbance, color = replicate), alpha = 0.6) +
       labs(
-        x = "Rel. concentration",
+        x = "Relative concentration",
         y = "Absorbance (a. u.)",
         title = "IgG in standard serum"
       ) +
@@ -92,7 +92,7 @@ plot.std <- function(semilog = FALSE) {
       alpha = 0.6
     ) +
       labs(
-        x = "Rel. concentration",
+        x = "Relative concentration",
         y = "Absorbance (a.u.)",
         title = "IgG in standard serum"
       ) +
