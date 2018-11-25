@@ -2,19 +2,18 @@
 ## Compute concentrations
 Rearranging the 4-PL equation for concentration $c$ gives:
 
-$$\log_2(c) = \log_2(\mathrm{EC}_{50}) + \dfrac{1}{n} \cdot \ln \left(\dfrac{\mathrm{A_{max} - A_{min}}}{A - \mathrm{A_{min}}} \right) $$.
+$$\log_2{c} =  \dfrac{1}{n} \left[ \log{\left( \dfrac{\mathrm{A_{max}} - A}{A - \mathrm{A_{min}}}\right)} + n \cdot \log_2{\mathrm{EC_{50}}} \right] $$.
 
 We compute the concentrations of our biological samples using the estimated calibration curve and plot the results:
 ```{r, results, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
 
 log2concentration.est <- sapply(donors.av$absorbance.av,
-  function(x)
-  log2EC50.est + (1/n.est) * log((Amax.est - Amin)/(x - Amin)))
-
+  function(A)
+  (1/n.est) * (log( ((Amax.est - A)/(A - Amin))) + log2EC50.est*n.est))
 
 # Get confidence intervals
 fgh <- deriv(
-  log2concentration ~ log2EC50 + (1/n) * log((Amax - Amin)/(A - Amin)),
+  log2concentration ~ (1/n) * (log( ((Amax - A)/(A - Amin))) + log2EC50*n),
   c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, A) {}
 )
 f.new <- fgh(Amax.est, log2EC50.est, n.est, donors.av$absorbance.av)

@@ -23,10 +23,14 @@ levm.fit <- nlsLM(
 )
 # Show summary of the fit
 summary(levm.fit)
+
+#standard<- standard %>%filter(log2concentration > -7)
+
+View(standard)
 ```
 Apparently, we can not estimate $\mathrm{A_{min}}$ from the data. But we can fix it to a certain value: we know that $\mathrm{A_{min}}$ can not be negative and we can use the values obtained from the blank wells as an estimate for $\mathrm{A_{min}}$.
 
-```{r, lm-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=4}
+```{r, lm-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=8}
 # Set Amin to blank values
 Amin <- median(blanks$blank)
 # Re-fit with only three free parameters
@@ -46,7 +50,7 @@ Amax.est <- coef(levm.fit)[[1]]
 log2EC50.est <- coef(levm.fit)[[2]]
 n.est <- coef(levm.fit)[[3]]
 # Full range of considered concentrations
-log2concentration.new <- log2(seq(0.008, 1, by = 0.001))
+log2concentration.new <- log2(seq(0.008, 2, by = 0.001))
 # Predict new absorbance values from calibration curve
 calibration.curve <- tibble(
   concentration.new = 2^log2concentration.new,
@@ -93,10 +97,9 @@ plot.ccurve <- plot.std(semilog = TRUE) +
         ymax = conf.upr),
     alpha = 0.1, fill = NA, color = "grey70", lty = 3
   ) +
-  scale_y_continuous(limits = c(-0.3, 2))
+  scale_y_continuous(limits = c(-0.3, 3), breaks = seq(-0.3, 3, 0.5)) 
 
 
-# TODO: Add ribbon and dashed line to legend
 plot.ccurve
 ```
 

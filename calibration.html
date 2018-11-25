@@ -25,7 +25,7 @@
 <meta name="author" content="JL">
 
 
-<meta name="date" content="2018-08-27">
+<meta name="date" content="2018-11-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -182,17 +182,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.2</span> Regression of the standard</h2>
 <p>We fit the data obtained for the standard to the four-parameter logistic curve. This is a non-linear least squares problem and we use the Levenberg-Marquadt algorithm to solve it.
 The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorithm (used by default by the <code>nls()</code> function of the <code>nls</code> package), which means it converges to a minimum even if the initial starting values are far from the final minimum.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># Fit 4-parameter logistic dose-response curve</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="co"># Approach 1): Use nlsLM pacakge for Levenberg-Marquardt optimization</span></a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">standard &lt;-<span class="st"> </span>standard <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2concentration =</span> <span class="kw">log2</span>(concentration))</a>
-<a class="sourceLine" id="cb19-4" data-line-number="4">levm.fit &lt;-<span class="st"> </span><span class="kw">nlsLM</span>(</a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">  absorbance <span class="op">~</span></a>
-<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="st">  </span>Amin <span class="op">+</span><span class="st"> </span>((Amax <span class="op">-</span><span class="st"> </span>Amin) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(n <span class="op">*</span><span class="st"> </span>(log2concentration <span class="op">-</span><span class="st"> </span>log2EC50)))),</a>
-<a class="sourceLine" id="cb19-7" data-line-number="7">  <span class="dt">data =</span> standard,</a>
-<a class="sourceLine" id="cb19-8" data-line-number="8">  <span class="dt">start =</span> <span class="kw">list</span>(<span class="dt">Amin =</span> <span class="dv">0</span>, <span class="dt">Amax =</span> <span class="dv">2</span>, <span class="dt">log2EC50 =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb19-9" data-line-number="9">)</a>
-<a class="sourceLine" id="cb19-10" data-line-number="10"><span class="co"># Show summary of the fit</span></a>
-<a class="sourceLine" id="cb19-11" data-line-number="11"><span class="kw">summary</span>(levm.fit)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Fit 4-parameter logistic dose-response curve</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co"># Approach 1): Use nlsLM pacakge for Levenberg-Marquardt optimization</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">standard &lt;-<span class="st"> </span>standard <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2concentration =</span> <span class="kw">log2</span>(concentration))</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">levm.fit &lt;-<span class="st"> </span><span class="kw">nlsLM</span>(</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">  absorbance <span class="op">~</span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span>Amin <span class="op">+</span><span class="st"> </span>((Amax <span class="op">-</span><span class="st"> </span>Amin) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(n <span class="op">*</span><span class="st"> </span>(log2concentration <span class="op">-</span><span class="st"> </span>log2EC50)))),</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">  <span class="dt">data =</span> standard,</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">  <span class="dt">start =</span> <span class="kw">list</span>(<span class="dt">Amin =</span> <span class="dv">0</span>, <span class="dt">Amax =</span> <span class="dv">2</span>, <span class="dt">log2EC50 =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb23-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="co"># Show summary of the fit</span></a>
+<a class="sourceLine" id="cb23-11" data-line-number="11"><span class="kw">summary</span>(levm.fit)</a></code></pre></div>
 <pre><code>## 
 ## Formula: absorbance ~ Amin + ((Amax - Amin)/(1 + exp(n * (log2concentration - 
 ##     log2EC50))))
@@ -210,18 +210,21 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 ## 
 ## Number of iterations to convergence: 10 
 ## Achieved convergence tolerance: 1.49e-08</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co">#standard&lt;- standard %&gt;%filter(log2concentration &gt; -7)</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="kw">View</span>(standard)</a></code></pre></div>
 <p>Apparently, we can not estimate <span class="math inline">\(\mathrm{A_{min}}\)</span> from the data. But we can fix it to a certain value: we know that <span class="math inline">\(\mathrm{A_{min}}\)</span> can not be negative and we can use the values obtained from the blank wells as an estimate for <span class="math inline">\(\mathrm{A_{min}}\)</span>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co"># Set Amin to blank values</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">Amin &lt;-<span class="st"> </span><span class="kw">median</span>(blanks<span class="op">$</span>blank)</a>
-<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co"># Re-fit with only three free parameters</span></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4">levm.fit &lt;-<span class="st"> </span><span class="kw">nlsLM</span>(</a>
-<a class="sourceLine" id="cb21-5" data-line-number="5">  absorbance <span class="op">~</span></a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">  </span>Amin <span class="op">+</span><span class="st"> </span>((Amax <span class="op">-</span><span class="st"> </span>Amin) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(n <span class="op">*</span><span class="st"> </span>(log2concentration <span class="op">-</span><span class="st"> </span>log2EC50)))),</a>
-<a class="sourceLine" id="cb21-7" data-line-number="7">  <span class="dt">data =</span> standard,</a>
-<a class="sourceLine" id="cb21-8" data-line-number="8">  <span class="dt">start =</span> <span class="kw">list</span>(<span class="dt">Amax =</span> <span class="dv">2</span>, <span class="dt">log2EC50 =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb21-9" data-line-number="9">)</a>
-<a class="sourceLine" id="cb21-10" data-line-number="10"><span class="co"># Check new fit results</span></a>
-<a class="sourceLine" id="cb21-11" data-line-number="11"><span class="kw">summary</span>(levm.fit)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Set Amin to blank values</span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">Amin &lt;-<span class="st"> </span><span class="kw">median</span>(blanks<span class="op">$</span>blank)</a>
+<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="co"># Re-fit with only three free parameters</span></a>
+<a class="sourceLine" id="cb26-4" data-line-number="4">levm.fit &lt;-<span class="st"> </span><span class="kw">nlsLM</span>(</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">  absorbance <span class="op">~</span></a>
+<a class="sourceLine" id="cb26-6" data-line-number="6"><span class="st">  </span>Amin <span class="op">+</span><span class="st"> </span>((Amax <span class="op">-</span><span class="st"> </span>Amin) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(n <span class="op">*</span><span class="st"> </span>(log2concentration <span class="op">-</span><span class="st"> </span>log2EC50)))),</a>
+<a class="sourceLine" id="cb26-7" data-line-number="7">  <span class="dt">data =</span> standard,</a>
+<a class="sourceLine" id="cb26-8" data-line-number="8">  <span class="dt">start =</span> <span class="kw">list</span>(<span class="dt">Amax =</span> <span class="dv">2</span>, <span class="dt">log2EC50 =</span> <span class="fl">0.5</span>, <span class="dt">n =</span> <span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb26-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb26-10" data-line-number="10"><span class="co"># Check new fit results</span></a>
+<a class="sourceLine" id="cb26-11" data-line-number="11"><span class="kw">summary</span>(levm.fit)</a></code></pre></div>
 <pre><code>## 
 ## Formula: absorbance ~ Amin + ((Amax - Amin)/(1 + exp(n * (log2concentration - 
 ##     log2EC50))))
@@ -238,85 +241,84 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 ## 
 ## Number of iterations to convergence: 9 
 ## Achieved convergence tolerance: 1.49e-08</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Get 95% confidence interval</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">confint</span>(levm.fit)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># Get 95% confidence interval</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">confint</span>(levm.fit)</a></code></pre></div>
 <pre><code>##                2.5%      97.5%
 ## Amax      1.8848732  2.8761358
 ## log2EC50 -2.0560171 -0.6645695
 ## n        -0.9010853 -0.6099279</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">## Add calibration curve to plot</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="co"># Save estimated parameters</span></a>
-<a class="sourceLine" id="cb25-3" data-line-number="3">Amax.est &lt;-<span class="st"> </span><span class="kw">coef</span>(levm.fit)[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">log2EC50.est &lt;-<span class="st"> </span><span class="kw">coef</span>(levm.fit)[[<span class="dv">2</span>]]</a>
-<a class="sourceLine" id="cb25-5" data-line-number="5">n.est &lt;-<span class="st"> </span><span class="kw">coef</span>(levm.fit)[[<span class="dv">3</span>]]</a>
-<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="co"># Full range of considered concentrations</span></a>
-<a class="sourceLine" id="cb25-7" data-line-number="7">log2concentration.new &lt;-<span class="st"> </span><span class="kw">log2</span>(<span class="kw">seq</span>(<span class="fl">0.008</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.001</span>))</a>
-<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="co"># Predict new absorbance values from calibration curve</span></a>
-<a class="sourceLine" id="cb25-9" data-line-number="9">calibration.curve &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb25-10" data-line-number="10">  <span class="dt">concentration.new =</span> <span class="dv">2</span><span class="op">^</span>log2concentration.new,</a>
-<a class="sourceLine" id="cb25-11" data-line-number="11">  <span class="dt">log2concentration.new =</span> log2concentration.new,</a>
-<a class="sourceLine" id="cb25-12" data-line-number="12">  <span class="dt">absorbance.est =</span> <span class="kw">predict</span>(levm.fit, <span class="kw">tibble</span>(<span class="dt">log2concentration =</span> log2concentration.new))</a>
-<a class="sourceLine" id="cb25-13" data-line-number="13">)</a>
-<a class="sourceLine" id="cb25-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb25-15" data-line-number="15">## Compute prediction and confidence intervals</a>
-<a class="sourceLine" id="cb25-16" data-line-number="16"><span class="co"># </span><span class="al">TODO</span><span class="co">: double-check, ignore this part for now</span></a>
-<a class="sourceLine" id="cb25-17" data-line-number="17">fgh &lt;-<span class="st"> </span><span class="kw">deriv</span>(</a>
-<a class="sourceLine" id="cb25-18" data-line-number="18">  absorbance <span class="op">~</span></a>
-<a class="sourceLine" id="cb25-19" data-line-number="19"><span class="st">  </span>Amin <span class="op">+</span><span class="st"> </span>((Amax <span class="op">-</span><span class="st"> </span>Amin) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(n <span class="op">*</span><span class="st"> </span>(log2concentration <span class="op">-</span><span class="st"> </span>log2EC50)))),</a>
-<a class="sourceLine" id="cb25-20" data-line-number="20">  <span class="kw">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, log2concentration) {}</a>
-<a class="sourceLine" id="cb25-21" data-line-number="21">)</a>
-<a class="sourceLine" id="cb25-22" data-line-number="22">f.new &lt;-<span class="st"> </span><span class="kw">fgh</span>(Amax.est, log2EC50.est, n.est, log2concentration.new)</a>
-<a class="sourceLine" id="cb25-23" data-line-number="23">g.new &lt;-<span class="st"> </span><span class="kw">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</a>
-<a class="sourceLine" id="cb25-24" data-line-number="24">cov.fit &lt;-<span class="st"> </span><span class="kw">vcov</span>(levm.fit)</a>
-<a class="sourceLine" id="cb25-25" data-line-number="25">gs &lt;-<span class="st"> </span><span class="kw">rowSums</span>((g.new <span class="op">%*%</span><span class="st"> </span>cov.fit) <span class="op">*</span><span class="st"> </span>g.new)</a>
-<a class="sourceLine" id="cb25-26" data-line-number="26">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></a>
-<a class="sourceLine" id="cb25-27" data-line-number="27">delta.f &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">15</span>)</a>
-<a class="sourceLine" id="cb25-28" data-line-number="28">sigma.est &lt;-<span class="st"> </span><span class="kw">summary</span>(levm.fit)<span class="op">$</span>sigma</a>
-<a class="sourceLine" id="cb25-29" data-line-number="29">delta.y &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs <span class="op">+</span><span class="st"> </span>sigma.est<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dv">15</span>)</a>
-<a class="sourceLine" id="cb25-30" data-line-number="30">calibration.curve &lt;-<span class="st"> </span>calibration.curve <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-31" data-line-number="31"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">pred.lwr =</span> absorbance.est <span class="op">-</span><span class="st"> </span>delta.y) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-32" data-line-number="32"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">pred.upr =</span> absorbance.est <span class="op">+</span><span class="st"> </span>delta.y) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-33" data-line-number="33"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">conf.lwr =</span> absorbance.est <span class="op">-</span><span class="st"> </span>delta.f) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-34" data-line-number="34"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">conf.upr =</span> absorbance.est <span class="op">+</span><span class="st"> </span>delta.f)</a>
-<a class="sourceLine" id="cb25-35" data-line-number="35"></a>
-<a class="sourceLine" id="cb25-36" data-line-number="36">## Plot calibration curve</a>
-<a class="sourceLine" id="cb25-37" data-line-number="37">plot.ccurve &lt;-<span class="st"> </span><span class="kw">plot.std</span>(<span class="dt">semilog =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb25-38" data-line-number="38"><span class="st">  </span><span class="kw">geom_line</span>(</a>
-<a class="sourceLine" id="cb25-39" data-line-number="39">    <span class="dt">data =</span> calibration.curve,</a>
-<a class="sourceLine" id="cb25-40" data-line-number="40">    <span class="kw">aes</span>(concentration.new, absorbance.est), <span class="dt">alpha =</span> <span class="fl">0.8</span></a>
-<a class="sourceLine" id="cb25-41" data-line-number="41">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb25-42" data-line-number="42"><span class="st">  </span><span class="kw">geom_ribbon</span>(</a>
-<a class="sourceLine" id="cb25-43" data-line-number="43">    <span class="dt">data =</span> calibration.curve,</a>
-<a class="sourceLine" id="cb25-44" data-line-number="44">    <span class="kw">aes</span>(<span class="dt">x =</span> concentration.new, <span class="dt">ymin =</span> pred.lwr, <span class="dt">ymax =</span> pred.upr),</a>
-<a class="sourceLine" id="cb25-45" data-line-number="45">    <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span></a>
-<a class="sourceLine" id="cb25-46" data-line-number="46">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb25-47" data-line-number="47"><span class="st">  </span><span class="kw">geom_ribbon</span>(</a>
-<a class="sourceLine" id="cb25-48" data-line-number="48">    <span class="dt">data =</span> calibration.curve,</a>
-<a class="sourceLine" id="cb25-49" data-line-number="49">    <span class="kw">aes</span>(<span class="dt">x =</span> concentration.new, </a>
-<a class="sourceLine" id="cb25-50" data-line-number="50">        <span class="dt">ymin =</span> conf.lwr, </a>
-<a class="sourceLine" id="cb25-51" data-line-number="51">        <span class="dt">ymax =</span> conf.upr),</a>
-<a class="sourceLine" id="cb25-52" data-line-number="52">    <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">color =</span> <span class="st">&quot;grey70&quot;</span>, <span class="dt">lty =</span> <span class="dv">3</span></a>
-<a class="sourceLine" id="cb25-53" data-line-number="53">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb25-54" data-line-number="54"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.3</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb25-55" data-line-number="55"></a>
-<a class="sourceLine" id="cb25-56" data-line-number="56"></a>
-<a class="sourceLine" id="cb25-57" data-line-number="57"><span class="co"># </span><span class="al">TODO</span><span class="co">: Add ribbon and dashed line to legend</span></a>
-<a class="sourceLine" id="cb25-58" data-line-number="58">plot.ccurve</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">## Add calibration curve to plot</a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="co"># Save estimated parameters</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3">Amax.est &lt;-<span class="st"> </span><span class="kw">coef</span>(levm.fit)[[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb30-4" data-line-number="4">log2EC50.est &lt;-<span class="st"> </span><span class="kw">coef</span>(levm.fit)[[<span class="dv">2</span>]]</a>
+<a class="sourceLine" id="cb30-5" data-line-number="5">n.est &lt;-<span class="st"> </span><span class="kw">coef</span>(levm.fit)[[<span class="dv">3</span>]]</a>
+<a class="sourceLine" id="cb30-6" data-line-number="6"><span class="co"># Full range of considered concentrations</span></a>
+<a class="sourceLine" id="cb30-7" data-line-number="7">log2concentration.new &lt;-<span class="st"> </span><span class="kw">log2</span>(<span class="kw">seq</span>(<span class="fl">0.008</span>, <span class="dv">2</span>, <span class="dt">by =</span> <span class="fl">0.001</span>))</a>
+<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="co"># Predict new absorbance values from calibration curve</span></a>
+<a class="sourceLine" id="cb30-9" data-line-number="9">calibration.curve &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb30-10" data-line-number="10">  <span class="dt">concentration.new =</span> <span class="dv">2</span><span class="op">^</span>log2concentration.new,</a>
+<a class="sourceLine" id="cb30-11" data-line-number="11">  <span class="dt">log2concentration.new =</span> log2concentration.new,</a>
+<a class="sourceLine" id="cb30-12" data-line-number="12">  <span class="dt">absorbance.est =</span> <span class="kw">predict</span>(levm.fit, <span class="kw">tibble</span>(<span class="dt">log2concentration =</span> log2concentration.new))</a>
+<a class="sourceLine" id="cb30-13" data-line-number="13">)</a>
+<a class="sourceLine" id="cb30-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb30-15" data-line-number="15">## Compute prediction and confidence intervals</a>
+<a class="sourceLine" id="cb30-16" data-line-number="16"><span class="co"># </span><span class="al">TODO</span><span class="co">: double-check, ignore this part for now</span></a>
+<a class="sourceLine" id="cb30-17" data-line-number="17">fgh &lt;-<span class="st"> </span><span class="kw">deriv</span>(</a>
+<a class="sourceLine" id="cb30-18" data-line-number="18">  absorbance <span class="op">~</span></a>
+<a class="sourceLine" id="cb30-19" data-line-number="19"><span class="st">  </span>Amin <span class="op">+</span><span class="st"> </span>((Amax <span class="op">-</span><span class="st"> </span>Amin) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(n <span class="op">*</span><span class="st"> </span>(log2concentration <span class="op">-</span><span class="st"> </span>log2EC50)))),</a>
+<a class="sourceLine" id="cb30-20" data-line-number="20">  <span class="kw">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, log2concentration) {}</a>
+<a class="sourceLine" id="cb30-21" data-line-number="21">)</a>
+<a class="sourceLine" id="cb30-22" data-line-number="22">f.new &lt;-<span class="st"> </span><span class="kw">fgh</span>(Amax.est, log2EC50.est, n.est, log2concentration.new)</a>
+<a class="sourceLine" id="cb30-23" data-line-number="23">g.new &lt;-<span class="st"> </span><span class="kw">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</a>
+<a class="sourceLine" id="cb30-24" data-line-number="24">cov.fit &lt;-<span class="st"> </span><span class="kw">vcov</span>(levm.fit)</a>
+<a class="sourceLine" id="cb30-25" data-line-number="25">gs &lt;-<span class="st"> </span><span class="kw">rowSums</span>((g.new <span class="op">%*%</span><span class="st"> </span>cov.fit) <span class="op">*</span><span class="st"> </span>g.new)</a>
+<a class="sourceLine" id="cb30-26" data-line-number="26">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></a>
+<a class="sourceLine" id="cb30-27" data-line-number="27">delta.f &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb30-28" data-line-number="28">sigma.est &lt;-<span class="st"> </span><span class="kw">summary</span>(levm.fit)<span class="op">$</span>sigma</a>
+<a class="sourceLine" id="cb30-29" data-line-number="29">delta.y &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs <span class="op">+</span><span class="st"> </span>sigma.est<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, <span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb30-30" data-line-number="30">calibration.curve &lt;-<span class="st"> </span>calibration.curve <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-31" data-line-number="31"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">pred.lwr =</span> absorbance.est <span class="op">-</span><span class="st"> </span>delta.y) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-32" data-line-number="32"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">pred.upr =</span> absorbance.est <span class="op">+</span><span class="st"> </span>delta.y) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-33" data-line-number="33"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">conf.lwr =</span> absorbance.est <span class="op">-</span><span class="st"> </span>delta.f) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-34" data-line-number="34"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">conf.upr =</span> absorbance.est <span class="op">+</span><span class="st"> </span>delta.f)</a>
+<a class="sourceLine" id="cb30-35" data-line-number="35"></a>
+<a class="sourceLine" id="cb30-36" data-line-number="36">## Plot calibration curve</a>
+<a class="sourceLine" id="cb30-37" data-line-number="37">plot.ccurve &lt;-<span class="st"> </span><span class="kw">plot.std</span>(<span class="dt">semilog =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-38" data-line-number="38"><span class="st">  </span><span class="kw">geom_line</span>(</a>
+<a class="sourceLine" id="cb30-39" data-line-number="39">    <span class="dt">data =</span> calibration.curve,</a>
+<a class="sourceLine" id="cb30-40" data-line-number="40">    <span class="kw">aes</span>(concentration.new, absorbance.est), <span class="dt">alpha =</span> <span class="fl">0.8</span></a>
+<a class="sourceLine" id="cb30-41" data-line-number="41">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-42" data-line-number="42"><span class="st">  </span><span class="kw">geom_ribbon</span>(</a>
+<a class="sourceLine" id="cb30-43" data-line-number="43">    <span class="dt">data =</span> calibration.curve,</a>
+<a class="sourceLine" id="cb30-44" data-line-number="44">    <span class="kw">aes</span>(<span class="dt">x =</span> concentration.new, <span class="dt">ymin =</span> pred.lwr, <span class="dt">ymax =</span> pred.upr),</a>
+<a class="sourceLine" id="cb30-45" data-line-number="45">    <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span></a>
+<a class="sourceLine" id="cb30-46" data-line-number="46">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-47" data-line-number="47"><span class="st">  </span><span class="kw">geom_ribbon</span>(</a>
+<a class="sourceLine" id="cb30-48" data-line-number="48">    <span class="dt">data =</span> calibration.curve,</a>
+<a class="sourceLine" id="cb30-49" data-line-number="49">    <span class="kw">aes</span>(<span class="dt">x =</span> concentration.new, </a>
+<a class="sourceLine" id="cb30-50" data-line-number="50">        <span class="dt">ymin =</span> conf.lwr, </a>
+<a class="sourceLine" id="cb30-51" data-line-number="51">        <span class="dt">ymax =</span> conf.upr),</a>
+<a class="sourceLine" id="cb30-52" data-line-number="52">    <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">color =</span> <span class="st">&quot;grey70&quot;</span>, <span class="dt">lty =</span> <span class="dv">3</span></a>
+<a class="sourceLine" id="cb30-53" data-line-number="53">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-54" data-line-number="54"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.3</span>, <span class="dv">3</span>), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="fl">0.3</span>, <span class="dv">3</span>, <span class="fl">0.5</span>)) </a>
+<a class="sourceLine" id="cb30-55" data-line-number="55"></a>
+<a class="sourceLine" id="cb30-56" data-line-number="56"></a>
+<a class="sourceLine" id="cb30-57" data-line-number="57">plot.ccurve</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/lm-fit-1.png" width="672" /></p>
 <p>The grey band shows the prediction interval and the dashed line the confidence interval (both for 95%).</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Plot predicted absorbance vs residuals</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">plot</span>(levm.fit)</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co"># Plot predicted absorbance vs residuals</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="kw">plot</span>(levm.fit)</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/tukey-plot-1.png" width="672" /></p>
 <p>Alternatively, one can use the <code>drc</code> package to fit a 4-PL curve using. However, the <code>drm</code> function performs a <span class="math inline">\(\ln\)</span> transformation of the independent variable by itself. So in this case, the results are for <span class="math inline">\(\ln\)</span>-transformed concentrations:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># Fit 4-parameter logistic dose-response curve</span></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co"># Approach 2): Use drc package</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co"># </span><span class="al">NOTE</span><span class="co">: the drm function performs a ln(x) transformation by itself.</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co"># See also ?LL2.4 for more information</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5">drc.fit &lt;-<span class="st"> </span><span class="kw">drm</span>(absorbance <span class="op">~</span><span class="st"> </span>concentration,</a>
-<a class="sourceLine" id="cb27-6" data-line-number="6">  <span class="dt">data =</span> standard,</a>
-<a class="sourceLine" id="cb27-7" data-line-number="7">  <span class="dt">fct =</span> <span class="kw">LL2.4</span>(<span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;n&quot;</span>, <span class="st">&quot;Amin&quot;</span>, <span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;EC50&quot;</span>))</a>
-<a class="sourceLine" id="cb27-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="kw">summary</span>(drc.fit)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co"># Fit 4-parameter logistic dose-response curve</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="co"># Approach 2): Use drc package</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="co"># </span><span class="al">NOTE</span><span class="co">: the drm function performs a ln(x) transformation by itself.</span></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="co"># See also ?LL2.4 for more information</span></a>
+<a class="sourceLine" id="cb32-5" data-line-number="5">drc.fit &lt;-<span class="st"> </span><span class="kw">drm</span>(absorbance <span class="op">~</span><span class="st"> </span>concentration,</a>
+<a class="sourceLine" id="cb32-6" data-line-number="6">  <span class="dt">data =</span> standard,</a>
+<a class="sourceLine" id="cb32-7" data-line-number="7">  <span class="dt">fct =</span> <span class="kw">LL2.4</span>(<span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;n&quot;</span>, <span class="st">&quot;Amin&quot;</span>, <span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;EC50&quot;</span>))</a>
+<a class="sourceLine" id="cb32-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb32-9" data-line-number="9"><span class="kw">summary</span>(drc.fit)</a></code></pre></div>
 <pre><code>## 
 ## Model fitted: Log-logistic (log(ED50) as parameter) (4 parms)
 ## 
@@ -333,14 +335,14 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 ## Residual standard error:
 ## 
 ##  0.05644039 (12 degrees of freedom)</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">plot</span>(drc.fit)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">plot</span>(drc.fit)</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/drc-fit-1.png" width="672" /></p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="kw">as.tibble</span>(drc.fit<span class="op">$</span>predres)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="st">`</span><span class="dt">Predicted values</span><span class="st">`</span>, Residuals),</a>
-<a class="sourceLine" id="cb30-3" data-line-number="3">    <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;cornflowerblue&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="st">  </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb30-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">lwd =</span> <span class="fl">0.2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="kw">as.tibble</span>(drc.fit<span class="op">$</span>predres)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="st">`</span><span class="dt">Predicted values</span><span class="st">`</span>, Residuals),</a>
+<a class="sourceLine" id="cb35-3" data-line-number="3">    <span class="dt">pch =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;cornflowerblue&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-4" data-line-number="4"><span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-5" data-line-number="5"><span class="st">  </span><span class="kw">panel_border</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">lwd =</span> <span class="fl">0.2</span>)</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/drc-fit-2.png" width="672" /></p>
 <p>Using the estimated parameters and the 4-PL equation, we can estimate unknown concentrations based on measured absorbance.</p>
 

@@ -25,7 +25,7 @@
 <meta name="author" content="JL">
 
 
-<meta name="date" content="2018-08-27">
+<meta name="date" content="2018-11-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -172,7 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Analyse ELISA data in <em>R</em></h1>
 <h4 class="author"><em>JL</em></h4>
-<h4 class="date"><em>2018-08-27</em></h4>
+<h4 class="date"><em>2018-11-25</em></h4>
 </div>
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
@@ -197,12 +197,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-11" data-line-number="11">               viridis, <span class="co"># for color palettes</span></a>
 <a class="sourceLine" id="cb1-12" data-line-number="12">               drc, minpack.lm) <span class="co"># for 4-param logistic regression</span></a></code></pre></div>
 <p>Now we read the excel file:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Get the project path</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">path &lt;-<span class="st"> </span>here<span class="op">::</span><span class="kw">here</span>()</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co"># Set the name of the excel file</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">file &lt;-<span class="st"> &quot;/../data/180821-IgG_HV_Test.xlsx&quot;</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co"># Import excel data</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">data &lt;-<span class="st"> </span>gdata<span class="op">::</span><span class="kw">read.xls</span>(<span class="kw">paste0</span>(path, file), <span class="dt">sheet =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span>as.tibble</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Set the name of the excel file</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">xlsx.file &lt;-<span class="st"> </span><span class="kw">paste0</span>(here<span class="op">::</span><span class="kw">here</span>(),</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="st">&quot;/../../PROJECTS/vaccine_response/data-raw/elisa_igg_igm/180821-HV_first_test_IgG.xlsx&quot;</span>)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># Import excel data</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">data &lt;-<span class="st"> </span>gdata<span class="op">::</span><span class="kw">read.xls</span>(xlsx.file, <span class="dt">sheet =</span> <span class="dv">1</span>, <span class="dt">header =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span>as.tibble</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># Let&#39;s have a look at the absorbance data.</span></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw">head</span>(data[<span class="kw">complete.cases</span>(data),])</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 15
@@ -217,8 +217,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## # ... with 3 more variables: V13 &lt;dbl&gt;, V14 &lt;dbl&gt;, V15 &lt;int&gt;</code></pre>
 <p>The odd rows show the absorbance at 450 nm and the even rows the absorbance at 620 nm. As expected, the background absorbance at 620 nm is very low.</p>
 <p>And these are our plate reader specifications</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Inspect plate reader specifications:</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">data[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</a></code></pre></div>
 <pre><code>## # A tibble: 37 x 2
 ##    V1                    V2         
 ##    &lt;fct&gt;                 &lt;fct&gt;      
@@ -237,34 +235,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="set-cell-indices-and-set-experimental-parameteres" class="section level2">
 <h2><span class="header-section-number">1.3</span> Set cell indices and set experimental parameteres</h2>
 <p>We need to specify some experiment-specific parameters manually such as the position of the wells with the standard samples and blanks, the number of replicates, etc.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Use View(data) to double-check row and column indices</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">## BLANKS</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co"># Location of the 450 nm measurment of our blanks</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">row.idx.blank &lt;-<span class="st"> </span><span class="dv">36</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">col.idx.blank &lt;-<span class="st"> </span><span class="dv">13</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">## STANDARD SAMPLES</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co"># Location of the 450 nm measurment of the first well </span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co"># of our standard (well 1A in our case)</span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11">row.idx.std &lt;-<span class="st"> </span><span class="dv">22</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">col.idx.std &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co"># Number of replicates of the standard</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14">n.repl.std &lt;-<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co"># Maximal concentration of the standard </span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">max.conc.std &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># i.e. 100 %, we use a relative scale</span></a>
-<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co"># Number of dilutions performed to obtain the calibration curve</span></a>
-<a class="sourceLine" id="cb6-18" data-line-number="18">n.dilutions &lt;-<span class="st"> </span><span class="dv">8</span></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co"># Dilution factor</span></a>
-<a class="sourceLine" id="cb6-20" data-line-number="20">dilution.fact =<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22">## BIOLOGICAL SAMPLES</a>
-<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="co"># Location of first well with the sample of the first donor (here well 3A)</span></a>
-<a class="sourceLine" id="cb6-24" data-line-number="24">row.idx.donor<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">22</span></a>
-<a class="sourceLine" id="cb6-25" data-line-number="25">col.idx.donor<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">5</span></a>
-<a class="sourceLine" id="cb6-26" data-line-number="26">n.donors &lt;-<span class="st"> </span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb6-27" data-line-number="27">tpoints &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">180</span>)</a>
-<a class="sourceLine" id="cb6-28" data-line-number="28">n.repl.donors &lt;-<span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Use View(data) to double-check row and column indices</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">## BLANKS</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co"># Location of the 450 nm measurment of our blanks</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">row.idx.blank &lt;-<span class="st"> </span><span class="dv">36</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">col.idx.blank &lt;-<span class="st"> </span><span class="dv">13</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">## STANDARD SAMPLES</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co"># Location of the 450 nm measurment of the first well </span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co"># of our standard (well 1A in our case)</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">row.idx.std &lt;-<span class="st"> </span><span class="dv">22</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">col.idx.std &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co"># Number of replicates of the standard</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">n.repl.std &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co"># Maximal concentration of the standard </span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">max.conc.std &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># i.e. 100 %, we use a relative scale</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co"># Number of dilutions performed to obtain the calibration curve</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18">n.dilutions &lt;-<span class="st"> </span><span class="dv">8</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co"># Dilution factor</span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">dilution.fact =<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22">## BIOLOGICAL SAMPLES</a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co"># Location of first well with the sample of the first donor (here well 3A)</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">row.idx.donor<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">22</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25">col.idx.donor<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26">n.donors &lt;-<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27">tpoints &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">180</span>)</a>
+<a class="sourceLine" id="cb5-28" data-line-number="28">n.repl.donors &lt;-<span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <p>Now we can start analysing the data.</p>
 
 </div>

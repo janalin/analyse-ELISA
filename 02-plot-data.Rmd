@@ -119,9 +119,14 @@ plot.std(semilog = TRUE)
 ## Plot biological samples
 Now let's have a look at our actual data. We measured IgG in serum of four donors on five different time points. We first define a plot for our biological samples and then plot it together with the standard curve to have a better overview.
 ```{r, plot-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, chache = TRUE}
+# select HV
+ID.selected <- c("BD1989", "MS1984", "SM1988", "HJ1992")
+
+donors.av <- donors.av %>% dplyr::mutate(ID = c(rep("BD1989", 5), rep("MS1984", 5), rep( "SM1988", 5), rep("HJ1992", 5)))
+donors.av
 plot.donors <- ggplot() +
-    geom_point(data = donors, 
-      aes(time, absorbance, color = donor, shape = replicate), alpha = 0.7) +
+    geom_point(data = donors.av, 
+      aes(time, absorbance.av, color = donor), alpha = 0.7) +
     geom_line(data = donors.av, 
       aes(time, absorbance.av, group = donor, color = donor), alpha = 0.6, lwd = 0.5) +
     labs(
@@ -130,7 +135,7 @@ plot.donors <- ggplot() +
     ) +
     scale_color_viridis(
       begin = 0.2, end = 0.8, discrete = TRUE,
-      labels = paste("Donor", seq(n.donors)), guide = guide_legend(title = "")
+      labels = paste("Donor", seq(n.donors)), guide = FALSE#guide_legend(title = "")
     ) +
     scale_y_continuous(limits = c(min.absorb, max.absorb + 0.1 * max.absorb)) +
     scale_x_continuous(breaks = tpoints) +
@@ -147,8 +152,36 @@ plot.donors <- ggplot() +
     background_grid(
       major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
     ) +
-    theme_plot()
+    theme_plot() + ylim(0,2)
 plot.donors
+# select HV
+ID.selected <- c("BD1989", "MS1984", "SM1988", "HJ1992")
+titer.s <- titer %>%
+  dplyr::mutate(ID = as.character(ID)) %>%
+  dplyr::filter(virus == "California") %>%
+  dplyr::filter(ID %in% ID.selected) 
+titer.s
+
+p.titer <- ggplot(data = titer.s) +
+  geom_point(data=titer.s, aes(time, log2titer, color = ID), alpha = 0.7) +
+  geom_line(
+    data = titer.s,
+    aes(time, log2titer, group = ID, color = ID), alpha = 0.6, lwd = 0.5
+  ) +
+  labs(
+    x = "Days after vaccination", y = "log2 HI titer",
+    title = "Corresponding HI titer"
+  ) +
+  scale_color_viridis(
+    begin = 0.2, end = 0.8, discrete = TRUE, guide = FALSE
+  ) +
+  scale_y_continuous(limits = c(0, max(titer.s$log2titer) + 0.1 * max(titer.s$log2titer))) +
+  scale_x_continuous(breaks = tpoints) +
+  background_grid(
+    major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
+  ) +
+  theme_plot() +
+  panel_border()
 ```
 
 ## Combine plots

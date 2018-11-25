@@ -25,7 +25,7 @@
 <meta name="author" content="JL">
 
 
-<meta name="date" content="2018-08-27">
+<meta name="date" content="2018-11-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -174,71 +174,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="compute-concentrations" class="section level2">
 <h2><span class="header-section-number">5.1</span> Compute concentrations</h2>
 <p>Rearranging the 4-PL equation for concentration <span class="math inline">\(c\)</span> gives:</p>
-<p><span class="math display">\[\log_2(c) = \log_2(\mathrm{EC}_{50}) + \dfrac{1}{n} \cdot \ln \left(\dfrac{\mathrm{A_{max} - A_{min}}}{A - \mathrm{A_{min}}} \right) \]</span>.</p>
+<p><span class="math display">\[\log_2{c} =  \dfrac{1}{n} \left[ \log{\left( \dfrac{\mathrm{A_{max}} - A}{A - \mathrm{A_{min}}}\right)} + n \cdot \log_2{\mathrm{EC_{50}}} \right] \]</span>.</p>
 <p>We compute the concentrations of our biological samples using the estimated calibration curve and plot the results:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">log2concentration.est &lt;-<span class="st"> </span><span class="kw">sapply</span>(donors.av<span class="op">$</span>absorbance.av,</a>
-<a class="sourceLine" id="cb31-2" data-line-number="2">  <span class="cf">function</span>(x)</a>
-<a class="sourceLine" id="cb31-3" data-line-number="3">  log2EC50.est <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>n.est) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>((Amax.est <span class="op">-</span><span class="st"> </span>Amin)<span class="op">/</span>(x <span class="op">-</span><span class="st"> </span>Amin)))</a>
-<a class="sourceLine" id="cb31-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb31-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb31-6" data-line-number="6"><span class="co"># Get confidence intervals</span></a>
-<a class="sourceLine" id="cb31-7" data-line-number="7">fgh &lt;-<span class="st"> </span><span class="kw">deriv</span>(</a>
-<a class="sourceLine" id="cb31-8" data-line-number="8">  log2concentration <span class="op">~</span><span class="st"> </span>log2EC50 <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>n) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>((Amax <span class="op">-</span><span class="st"> </span>Amin)<span class="op">/</span>(A <span class="op">-</span><span class="st"> </span>Amin)),</a>
-<a class="sourceLine" id="cb31-9" data-line-number="9">  <span class="kw">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}</a>
-<a class="sourceLine" id="cb31-10" data-line-number="10">)</a>
-<a class="sourceLine" id="cb31-11" data-line-number="11">f.new &lt;-<span class="st"> </span><span class="kw">fgh</span>(Amax.est, log2EC50.est, n.est, donors.av<span class="op">$</span>absorbance.av)</a>
-<a class="sourceLine" id="cb31-12" data-line-number="12">g.new &lt;-<span class="st"> </span><span class="kw">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</a>
-<a class="sourceLine" id="cb31-13" data-line-number="13">gs &lt;-<span class="st"> </span><span class="kw">rowSums</span>((g.new <span class="op">%*%</span><span class="st"> </span>cov.fit) <span class="op">*</span><span class="st"> </span>g.new)</a>
-<a class="sourceLine" id="cb31-14" data-line-number="14">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></a>
-<a class="sourceLine" id="cb31-15" data-line-number="15">delta.f &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">15</span>)</a>
-<a class="sourceLine" id="cb31-16" data-line-number="16">results &lt;-<span class="st"> </span>donors.av <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb31-17" data-line-number="17"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">concentration.est =</span> <span class="dv">2</span><span class="op">^</span>log2concentration.est) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb31-18" data-line-number="18"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2concentration.est =</span> log2concentration.est) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb31-19" data-line-number="19"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2conf =</span> delta.f) </a>
-<a class="sourceLine" id="cb31-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb31-21" data-line-number="21"><span class="co"># Inspect results</span></a>
-<a class="sourceLine" id="cb31-22" data-line-number="22"><span class="kw">head</span>(results)</a></code></pre></div>
-<pre><code>## # A tibble: 6 x 6
-##   donor  time absorbance.av concentration.est log2concentration.… log2conf
-##   &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt;             &lt;dbl&gt;               &lt;dbl&gt;    &lt;dbl&gt;
-## 1 1         0         0.236            0.0422               -4.57    0.327
-## 2 1         7         0.497            0.0852               -3.55    0.198
-## 3 1        30         0.660            0.111                -3.17    0.185
-## 4 1        60         0.804            0.134                -2.90    0.195
-## 5 1       180         0.382            0.0665               -3.91    0.232
-## 6 2         0         0.434            0.0751               -3.74    0.213</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">log2concentration.est &lt;-<span class="st"> </span><span class="kw">sapply</span>(donors.av<span class="op">$</span>absorbance.av,</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">  <span class="cf">function</span>(A)</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">  (<span class="dv">1</span><span class="op">/</span>n.est) <span class="op">*</span><span class="st"> </span>(<span class="kw">log</span>( ((Amax.est <span class="op">-</span><span class="st"> </span>A)<span class="op">/</span>(A <span class="op">-</span><span class="st"> </span>Amin))) <span class="op">+</span><span class="st"> </span>log2EC50.est<span class="op">*</span>n.est))</a>
+<a class="sourceLine" id="cb36-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="co"># Get confidence intervals</span></a>
+<a class="sourceLine" id="cb36-6" data-line-number="6">fgh &lt;-<span class="st"> </span><span class="kw">deriv</span>(</a>
+<a class="sourceLine" id="cb36-7" data-line-number="7">  log2concentration <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>n) <span class="op">*</span><span class="st"> </span>(<span class="kw">log</span>( ((Amax <span class="op">-</span><span class="st"> </span>A)<span class="op">/</span>(A <span class="op">-</span><span class="st"> </span>Amin))) <span class="op">+</span><span class="st"> </span>log2EC50<span class="op">*</span>n),</a>
+<a class="sourceLine" id="cb36-8" data-line-number="8">  <span class="kw">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}</a>
+<a class="sourceLine" id="cb36-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb36-10" data-line-number="10">f.new &lt;-<span class="st"> </span><span class="kw">fgh</span>(Amax.est, log2EC50.est, n.est, donors.av<span class="op">$</span>absorbance.av)</a>
+<a class="sourceLine" id="cb36-11" data-line-number="11">g.new &lt;-<span class="st"> </span><span class="kw">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</a>
+<a class="sourceLine" id="cb36-12" data-line-number="12">gs &lt;-<span class="st"> </span><span class="kw">rowSums</span>((g.new <span class="op">%*%</span><span class="st"> </span>cov.fit) <span class="op">*</span><span class="st"> </span>g.new)</a>
+<a class="sourceLine" id="cb36-13" data-line-number="13">alpha &lt;-<span class="st"> </span><span class="fl">0.05</span></a>
+<a class="sourceLine" id="cb36-14" data-line-number="14">delta.f &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb36-15" data-line-number="15">results &lt;-<span class="st"> </span>donors.av <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-16" data-line-number="16"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">concentration.est =</span> <span class="dv">2</span><span class="op">^</span>log2concentration.est) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-17" data-line-number="17"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2concentration.est =</span> log2concentration.est) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-18" data-line-number="18"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2conf =</span> delta.f) </a>
+<a class="sourceLine" id="cb36-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb36-20" data-line-number="20"><span class="co"># Inspect results</span></a>
+<a class="sourceLine" id="cb36-21" data-line-number="21"><span class="kw">head</span>(results)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 7
+##   donor  time absorbance.av ID    concentration.e… log2concentrati…
+##   &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1 1         0         0.236 BD19…           0.0467            -4.42
+## 2 1         7         0.497 BD19…           0.108             -3.22
+## 3 1        30         0.660 BD19…           0.154             -2.70
+## 4 1        60         0.804 BD19…           0.203             -2.30
+## 5 1       180         0.382 BD19…           0.0792            -3.66
+## 6 2         0         0.434 MS19…           0.0918            -3.45
+## # ... with 1 more variable: log2conf &lt;dbl&gt;</code></pre>
 </div>
 <div id="plot-results" class="section level2">
 <h2><span class="header-section-number">5.2</span> Plot results</h2>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">plot.results &lt;-<span class="st"> </span><span class="kw">ggplot</span>(</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2">    <span class="dt">data =</span> results,</a>
-<a class="sourceLine" id="cb33-3" data-line-number="3">    <span class="kw">aes</span>(time, concentration.est, <span class="dt">color =</span> donor)</a>
-<a class="sourceLine" id="cb33-4" data-line-number="4">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(time, concentration.est, <span class="dt">group =</span> donor), </a>
-<a class="sourceLine" id="cb33-6" data-line-number="6">    <span class="dt">alpha =</span> <span class="fl">0.6</span>, <span class="dt">lwd =</span> <span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb33-7" data-line-number="7">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-8" data-line-number="8"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb33-9" data-line-number="9">    <span class="dt">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>,</a>
-<a class="sourceLine" id="cb33-10" data-line-number="10">    <span class="dt">y =</span> <span class="st">&quot;Relative concentration&quot;</span>,</a>
-<a class="sourceLine" id="cb33-11" data-line-number="11">    <span class="dt">title =</span> <span class="st">&quot;IgG serum of in healthy volunteers&quot;</span></a>
-<a class="sourceLine" id="cb33-12" data-line-number="12">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-13" data-line-number="13"><span class="st">  </span><span class="kw">scale_color_viridis</span>(</a>
-<a class="sourceLine" id="cb33-14" data-line-number="14">    <span class="dt">begin =</span> <span class="fl">0.2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>, <span class="dt">discrete =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb33-15" data-line-number="15">    <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="kw">seq</span>(n.donors)), <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb33-16" data-line-number="16">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-17" data-line-number="17"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> tpoints) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-18" data-line-number="18"><span class="st">  </span><span class="kw">background_grid</span>(</a>
-<a class="sourceLine" id="cb33-19" data-line-number="19">    <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb33-20" data-line-number="20">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-21" data-line-number="21"><span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-22" data-line-number="22"><span class="st">  </span><span class="kw">geom_pointrange</span>(</a>
-<a class="sourceLine" id="cb33-23" data-line-number="23">    <span class="kw">aes</span>(<span class="dt">ymin =</span> concentration.est <span class="op">/</span><span class="st"> </span><span class="dv">2</span><span class="op">^</span>log2conf, </a>
-<a class="sourceLine" id="cb33-24" data-line-number="24">        <span class="dt">ymax =</span> concentration.est <span class="op">*</span><span class="st"> </span><span class="dv">2</span><span class="op">^</span>log2conf), </a>
-<a class="sourceLine" id="cb33-25" data-line-number="25">    <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="fl">0.4</span></a>
-<a class="sourceLine" id="cb33-26" data-line-number="26">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb33-27" data-line-number="27"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span>percent)</a>
-<a class="sourceLine" id="cb33-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb33-29" data-line-number="29">plot.results</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">plot.results &lt;-<span class="st"> </span><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">    <span class="dt">data =</span> results,</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3">    <span class="kw">aes</span>(time, concentration.est, <span class="dt">color =</span> donor)</a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(time, concentration.est, <span class="dt">group =</span> donor), </a>
+<a class="sourceLine" id="cb38-6" data-line-number="6">    <span class="dt">alpha =</span> <span class="fl">0.6</span>, <span class="dt">lwd =</span> <span class="fl">0.5</span></a>
+<a class="sourceLine" id="cb38-7" data-line-number="7">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-8" data-line-number="8"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb38-9" data-line-number="9">    <span class="dt">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>,</a>
+<a class="sourceLine" id="cb38-10" data-line-number="10">    <span class="dt">y =</span> <span class="st">&quot;Relative concentration&quot;</span>,</a>
+<a class="sourceLine" id="cb38-11" data-line-number="11">    <span class="dt">title =</span> <span class="st">&quot;IgG serum of in healthy volunteers&quot;</span></a>
+<a class="sourceLine" id="cb38-12" data-line-number="12">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-13" data-line-number="13"><span class="st">  </span><span class="kw">scale_color_viridis</span>(</a>
+<a class="sourceLine" id="cb38-14" data-line-number="14">    <span class="dt">begin =</span> <span class="fl">0.2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>, <span class="dt">discrete =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb38-15" data-line-number="15">    <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="kw">seq</span>(n.donors)), <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb38-16" data-line-number="16">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-17" data-line-number="17"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> tpoints) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-18" data-line-number="18"><span class="st">  </span><span class="kw">background_grid</span>(</a>
+<a class="sourceLine" id="cb38-19" data-line-number="19">    <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span></a>
+<a class="sourceLine" id="cb38-20" data-line-number="20">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-21" data-line-number="21"><span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-22" data-line-number="22"><span class="st">  </span><span class="kw">geom_pointrange</span>(</a>
+<a class="sourceLine" id="cb38-23" data-line-number="23">    <span class="kw">aes</span>(<span class="dt">ymin =</span> concentration.est <span class="op">/</span><span class="st"> </span><span class="dv">2</span><span class="op">^</span>log2conf, </a>
+<a class="sourceLine" id="cb38-24" data-line-number="24">        <span class="dt">ymax =</span> concentration.est <span class="op">*</span><span class="st"> </span><span class="dv">2</span><span class="op">^</span>log2conf), </a>
+<a class="sourceLine" id="cb38-25" data-line-number="25">    <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="fl">0.4</span></a>
+<a class="sourceLine" id="cb38-26" data-line-number="26">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-27" data-line-number="27"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span>percent)</a>
+<a class="sourceLine" id="cb38-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb38-29" data-line-number="29">plot.results</a></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/plot-results-1.png" width="672" /></p>
 
 </div>
