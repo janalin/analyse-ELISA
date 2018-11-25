@@ -135,7 +135,7 @@ plot.donors <- ggplot() +
     ) +
     scale_color_viridis(
       begin = 0.2, end = 0.8, discrete = TRUE,
-      labels = paste("Donor", seq(n.donors)), guide = FALSE#guide_legend(title = "")
+      labels = paste("Donor", seq(n.donors)), guide = guide_legend(title = "")
     ) +
     scale_y_continuous(limits = c(min.absorb, max.absorb + 0.1 * max.absorb)) +
     scale_x_continuous(breaks = tpoints) +
