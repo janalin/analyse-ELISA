@@ -150,34 +150,6 @@ plot.donors <- ggplot() +
       major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
     ) +
     theme_plot() + ylim(0,2)
-
-# select HV
-ID.selected <- c("BD1989", "MS1984", "SM1988", "HJ1992")
-titer.s <- titer %>%
-  dplyr::mutate(ID = as.character(ID)) %>%
-  dplyr::filter(virus == "California") %>%
-  dplyr::filter(ID %in% ID.selected) 
-
-p.titer <- ggplot(data = titer.s) +
-  geom_point(data=titer.s, aes(time, log2titer, color = ID), alpha = 0.7) +
-  geom_line(
-    data = titer.s,
-    aes(time, log2titer, group = ID, color = ID), alpha = 0.6, lwd = 0.5
-  ) +
-  labs(
-    x = "Days after vaccination", y = "log2 HI titer",
-    title = "Corresponding HI titer"
-  ) +
-  scale_color_viridis(
-    begin = 0.2, end = 0.8, discrete = TRUE, guide = FALSE
-  ) +
-  scale_y_continuous(limits = c(0, max(titer.s$log2titer) + 0.1 * max(titer.s$log2titer))) +
-  scale_x_continuous(breaks = tpoints) +
-  background_grid(
-    major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
-  ) +
-  theme_plot() +
-  panel_border()
 ```
 
 ## Combine plots

@@ -312,35 +312,7 @@ donors.av</code></pre></div>
 <span class="st">    </span><span class="kw">background_grid</span>(
       <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span>
     ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_plot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">2</span>)
-
-<span class="co"># select HV</span>
-ID.selected &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;BD1989&quot;</span>, <span class="st">&quot;MS1984&quot;</span>, <span class="st">&quot;SM1988&quot;</span>, <span class="st">&quot;HJ1992&quot;</span>)
-titer.s &lt;-<span class="st"> </span>titer <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">ID =</span> <span class="kw">as.character</span>(ID)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(virus <span class="op">==</span><span class="st"> &quot;California&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(ID <span class="op">%in%</span><span class="st"> </span>ID.selected) 
-
-p.titer &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> titer.s) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span>titer.s, <span class="kw">aes</span>(time, log2titer, <span class="dt">color =</span> ID), <span class="dt">alpha =</span> <span class="fl">0.7</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(
-    <span class="dt">data =</span> titer.s,
-    <span class="kw">aes</span>(time, log2titer, <span class="dt">group =</span> ID, <span class="dt">color =</span> ID), <span class="dt">alpha =</span> <span class="fl">0.6</span>, <span class="dt">lwd =</span> <span class="fl">0.5</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;log2 HI titer&quot;</span>,
-    <span class="dt">title =</span> <span class="st">&quot;Corresponding HI titer&quot;</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_color_viridis</span>(
-    <span class="dt">begin =</span> <span class="fl">0.2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>, <span class="dt">discrete =</span> <span class="ot">TRUE</span>, <span class="dt">guide =</span> <span class="ot">FALSE</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(titer.s<span class="op">$</span>log2titer) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(titer.s<span class="op">$</span>log2titer))) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> tpoints) <span class="op">+</span>
-<span class="st">  </span><span class="kw">background_grid</span>(
-    <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">panel_border</span>()</code></pre></div>
+<span class="st">    </span><span class="kw">theme_plot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">2</span>)</code></pre></div>
 </div>
 <div id="combine-plots" class="section level2">
 <h2><span class="header-section-number">3.4</span> Combine plots</h2>
