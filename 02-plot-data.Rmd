@@ -31,9 +31,6 @@ theme_plot <- function(
       hjust = title.hjust
     ),
     plot.margin = rep(grid::unit(1, "cm"), 4),
-    strip.text.x = element_text(size = font.size),
-    strip.text.y = element_text(size = font.size),
-    strip.background = element_rect(fill = "white"),
     axis.line = element_blank(),
     legend.position = legend.pos,
     legend.direction = legend.dir,
@@ -153,14 +150,13 @@ plot.donors <- ggplot() +
       major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
     ) +
     theme_plot() + ylim(0,2)
-plot.donors
+
 # select HV
 ID.selected <- c("BD1989", "MS1984", "SM1988", "HJ1992")
 titer.s <- titer %>%
   dplyr::mutate(ID = as.character(ID)) %>%
   dplyr::filter(virus == "California") %>%
   dplyr::filter(ID %in% ID.selected) 
-titer.s
 
 p.titer <- ggplot(data = titer.s) +
   geom_point(data=titer.s, aes(time, log2titer, color = ID), alpha = 0.7) +

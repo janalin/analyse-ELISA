@@ -25,7 +25,7 @@
 <meta name="author" content="JL">
 
 
-<meta name="date" content="2018-11-25">
+<meta name="date" content="2018-11-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -174,9 +174,6 @@ theme_plot &lt;-<span class="st"> </span><span class="cf">function</span>(
       <span class="dt">hjust =</span> title.hjust
     ),
     <span class="dt">plot.margin =</span> <span class="kw">rep</span>(grid<span class="op">::</span><span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">&quot;cm&quot;</span>), <span class="dv">4</span>),
-    <span class="dt">strip.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> font.size),
-    <span class="dt">strip.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> font.size),
-    <span class="dt">strip.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;white&quot;</span>),
     <span class="dt">axis.line =</span> <span class="kw">element_blank</span>(),
     <span class="dt">legend.position =</span> legend.pos,
     <span class="dt">legend.direction =</span> legend.dir,
@@ -316,43 +313,15 @@ donors.av</code></pre></div>
       <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span>
     ) <span class="op">+</span>
 <span class="st">    </span><span class="kw">theme_plot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">2</span>)
-plot.donors</code></pre></div>
-<p><img src="analyse-ELISA_files/figure-html/plot-samples-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># select HV</span>
+
+<span class="co"># select HV</span>
 ID.selected &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;BD1989&quot;</span>, <span class="st">&quot;MS1984&quot;</span>, <span class="st">&quot;SM1988&quot;</span>, <span class="st">&quot;HJ1992&quot;</span>)
 titer.s &lt;-<span class="st"> </span>titer <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">ID =</span> <span class="kw">as.character</span>(ID)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(virus <span class="op">==</span><span class="st"> &quot;California&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(ID <span class="op">%in%</span><span class="st"> </span>ID.selected) 
-titer.s</code></pre></div>
-<pre><code>## # A tibble: 20 x 22
-##    ID    virus virusType  time titer log2titer cohort   age batch dayOfExp
-##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-##  1 BD19… Cali… A/H1N1        0    16         4      1    25    NA       NA
-##  2 SM19… Cali… A/H1N1        0     8         3      1    26    NA       NA
-##  3 MS19… Cali… A/H1N1        0    32         5      1    30    NA       NA
-##  4 HJ19… Cali… A/H1N1        0   256         8      1    22    NA       NA
-##  5 BD19… Cali… A/H1N1        7    64         6      1    25    NA       NA
-##  6 SM19… Cali… A/H1N1        7   256         8      1    26    NA       NA
-##  7 MS19… Cali… A/H1N1        7    64         6      1    30    NA       NA
-##  8 HJ19… Cali… A/H1N1        7   512         9      1    22    NA       NA
-##  9 BD19… Cali… A/H1N1       30   128         7      1    25    NA       NA
-## 10 SM19… Cali… A/H1N1       30   128         7      1    26    NA       NA
-## 11 MS19… Cali… A/H1N1       30   128         7      1    30    NA       NA
-## 12 HJ19… Cali… A/H1N1       30   512         9      1    22    NA       NA
-## 13 BD19… Cali… A/H1N1       60   128         7      1    25    NA       NA
-## 14 SM19… Cali… A/H1N1       60   128         7      1    26    NA       NA
-## 15 MS19… Cali… A/H1N1       60   128         7      1    30    NA       NA
-## 16 HJ19… Cali… A/H1N1       60   512         9      1    22    NA       NA
-## 17 BD19… Cali… A/H1N1      180    64         6      1    25    NA       NA
-## 18 SM19… Cali… A/H1N1      180    64         6      1    26    NA       NA
-## 19 MS19… Cali… A/H1N1      180    64         6      1    30    NA       NA
-## 20 HJ19… Cali… A/H1N1      180   512         9      1    22    NA       NA
-## # ... with 12 more variables: animalBlood &lt;chr&gt;, group &lt;chr&gt;,
-## #   number &lt;chr&gt;, rs8099917 &lt;chr&gt;, rs12979860 &lt;chr&gt;, rs10903035 &lt;chr&gt;,
-## #   rs10853727 &lt;chr&gt;, rs28383797 &lt;chr&gt;, rs2243248 &lt;chr&gt;, rs2069824 &lt;chr&gt;,
-## #   ageCenterByCohort &lt;dbl&gt;, ageCenter &lt;dbl&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p.titer &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> titer.s) <span class="op">+</span>
+
+p.titer &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> titer.s) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data=</span>titer.s, <span class="kw">aes</span>(time, log2titer, <span class="dt">color =</span> ID), <span class="dt">alpha =</span> <span class="fl">0.7</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(
     <span class="dt">data =</span> titer.s,
