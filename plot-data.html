@@ -1,45 +1,46 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Analyse ELISA data in R</title>
-  <meta name="description" content="Analyse ELISA data in <em>R</em>">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Plot data | Analyse ELISA data in R</title>
+  <meta name="description" content="3 Plot data | Analyse ELISA data in R" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Analyse ELISA data in R" />
+  <meta property="og:title" content="3 Plot data | Analyse ELISA data in R" />
   <meta property="og:type" content="book" />
-  
   
   
   <meta name="github-repo" content="janalin/ELISA-analysis" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Analyse ELISA data in R" />
+  <meta name="twitter:title" content="3 Plot data | Analyse ELISA data in R" />
   
   
   
 
-<meta name="author" content="JL">
+<meta name="author" content="JL" />
 
 
-<meta name="date" content="2018-11-27">
+<meta name="date" content="2018-11-27" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="correct-data.html">
-<link rel="next" href="calibration.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="correct-data.html"/>
+<link rel="next" href="calibration.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,44 +48,80 @@
 
 
 
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -103,23 +140,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="https://janalin.github.io/analyse-ELISA/">Analyse ELISA data in R</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#about-the-experiment-in-brief"><i class="fa fa-check"></i><b>1.1</b> About the experiment in brief</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-fiele"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel fiele</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#set-cell-indices-and-set-experimental-parameteres"><i class="fa fa-check"></i><b>1.3</b> Set cell indices and set experimental parameteres</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="correct-data.html"><a href="correct-data.html"><i class="fa fa-check"></i><b>2</b> Correct data</a></li>
-<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a><ul>
+<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="plot-data.html"><a href="plot-data.html#define-plot-theme"><i class="fa fa-check"></i><b>3.1</b> Define plot theme</a></li>
 <li class="chapter" data-level="3.2" data-path="plot-data.html"><a href="plot-data.html#plot-standard"><i class="fa fa-check"></i><b>3.2</b> Plot standard</a></li>
 <li class="chapter" data-level="3.3" data-path="plot-data.html"><a href="plot-data.html#plot-biological-samples"><i class="fa fa-check"></i><b>3.3</b> Plot biological samples</a></li>
 <li class="chapter" data-level="3.4" data-path="plot-data.html"><a href="plot-data.html#combine-plots"><i class="fa fa-check"></i><b>3.4</b> Combine plots</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a><ul>
+<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="calibration.html"><a href="calibration.html#the-four-parameter-logistic-curve"><i class="fa fa-check"></i><b>4.1</b> The four-parameter logistic curve</a></li>
 <li class="chapter" data-level="4.2" data-path="calibration.html"><a href="calibration.html#regression-of-the-standard"><i class="fa fa-check"></i><b>4.2</b> Regression of the standard</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#compute-concentrations"><i class="fa fa-check"></i><b>5.1</b> Compute concentrations</a></li>
 <li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#plot-results"><i class="fa fa-check"></i><b>5.2</b> Plot results</a></li>
 </ul></li>
@@ -141,182 +182,181 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plot-data" class="section level1">
-<h1><span class="header-section-number">3</span> Plot data</h1>
+<div id="plot-data" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Plot data<a href="plot-data.html#plot-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>For convenience, we first define a plot theme:</p>
-<div id="define-plot-theme" class="section level2">
-<h2><span class="header-section-number">3.1</span> Define plot theme</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">min.absorb &lt;-<span class="st"> </span><span class="kw">min</span>(blanks<span class="op">$</span>blank)
-max.absorb &lt;-<span class="st"> </span><span class="kw">max</span>(standard<span class="op">$</span>absorbance)
-font.size &lt;-<span class="st"> </span><span class="dv">11</span>
-<span class="co"># Define theme for plotting</span>
-<span class="co">#&#39; @param title.hjust horizontal alignment of plot title</span>
-<span class="co">#&#39; @param legend_pos legend position</span>
-<span class="co">#&#39; @return theme for ggplot</span>
-theme_plot &lt;-<span class="st"> </span><span class="cf">function</span>(
-  <span class="dt">title.hjust =</span> <span class="dv">0</span>, <span class="dt">legend.pos =</span> <span class="st">&quot;right&quot;</span>, <span class="dt">legend.dir =</span> <span class="st">&quot;vertical&quot;</span>) {
-  <span class="kw">theme</span>(
-    <span class="dt">axis.text =</span> <span class="kw">element_text</span>(
-      <span class="dt">size =</span> font.size,
-      <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>
-    ),
-    <span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(
-      <span class="dt">size =</span> font.size,
-      <span class="dt">hjust =</span> <span class="dv">1</span>
-    ),
-    <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(
-      <span class="dt">size =</span> font.size,
-      <span class="dt">hjust =</span> <span class="fl">0.9</span>
-    ),
-    <span class="dt">plot.title =</span> <span class="kw">element_text</span>(
-      <span class="dt">size =</span> font.size <span class="op">+</span><span class="st"> </span><span class="dv">2</span>,
-      <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>,
-      <span class="dt">hjust =</span> title.hjust
-    ),
-    <span class="dt">plot.margin =</span> <span class="kw">rep</span>(grid<span class="op">::</span><span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">&quot;cm&quot;</span>), <span class="dv">4</span>),
-    <span class="dt">axis.line =</span> <span class="kw">element_blank</span>(),
-    <span class="dt">legend.position =</span> legend.pos,
-    <span class="dt">legend.direction =</span> legend.dir,
-    <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> font.size),
-    <span class="dt">legend.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> font.size)
-  ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">background_grid</span>(
-      <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>,
-      <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>,
-      <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>,
-      <span class="dt">size.major =</span> <span class="fl">0.2</span>
-    )
-}</code></pre></div>
+<div id="define-plot-theme" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Define plot theme<a href="plot-data.html#define-plot-theme" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="plot-data.html#cb11-1" aria-hidden="true" tabindex="-1"></a>min.absorb <span class="ot">&lt;-</span> <span class="fu">min</span>(blanks<span class="sc">$</span>blank)</span>
+<span id="cb11-2"><a href="plot-data.html#cb11-2" aria-hidden="true" tabindex="-1"></a>max.absorb <span class="ot">&lt;-</span> <span class="fu">max</span>(standard<span class="sc">$</span>absorbance)</span>
+<span id="cb11-3"><a href="plot-data.html#cb11-3" aria-hidden="true" tabindex="-1"></a>font.size <span class="ot">&lt;-</span> <span class="dv">11</span></span>
+<span id="cb11-4"><a href="plot-data.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define theme for plotting</span></span>
+<span id="cb11-5"><a href="plot-data.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param title.hjust horizontal alignment of plot title</span></span>
+<span id="cb11-6"><a href="plot-data.html#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param legend_pos legend position</span></span>
+<span id="cb11-7"><a href="plot-data.html#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return theme for ggplot</span></span>
+<span id="cb11-8"><a href="plot-data.html#cb11-8" aria-hidden="true" tabindex="-1"></a>theme_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb11-9"><a href="plot-data.html#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title.hjust =</span> <span class="dv">0</span>, <span class="at">legend.pos =</span> <span class="st">&quot;right&quot;</span>, <span class="at">legend.dir =</span> <span class="st">&quot;vertical&quot;</span>) {</span>
+<span id="cb11-10"><a href="plot-data.html#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb11-11"><a href="plot-data.html#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb11-12"><a href="plot-data.html#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> font.size,</span>
+<span id="cb11-13"><a href="plot-data.html#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">face =</span> <span class="st">&quot;bold&quot;</span></span>
+<span id="cb11-14"><a href="plot-data.html#cb11-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-15"><a href="plot-data.html#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb11-16"><a href="plot-data.html#cb11-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> font.size,</span>
+<span id="cb11-17"><a href="plot-data.html#cb11-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="dv">1</span></span>
+<span id="cb11-18"><a href="plot-data.html#cb11-18" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-19"><a href="plot-data.html#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(</span>
+<span id="cb11-20"><a href="plot-data.html#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> font.size,</span>
+<span id="cb11-21"><a href="plot-data.html#cb11-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> <span class="fl">0.9</span></span>
+<span id="cb11-22"><a href="plot-data.html#cb11-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-23"><a href="plot-data.html#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(</span>
+<span id="cb11-24"><a href="plot-data.html#cb11-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> font.size <span class="sc">+</span> <span class="dv">2</span>,</span>
+<span id="cb11-25"><a href="plot-data.html#cb11-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>,</span>
+<span id="cb11-26"><a href="plot-data.html#cb11-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">hjust =</span> title.hjust</span>
+<span id="cb11-27"><a href="plot-data.html#cb11-27" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-28"><a href="plot-data.html#cb11-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">rep</span>(grid<span class="sc">::</span><span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">&quot;cm&quot;</span>), <span class="dv">4</span>),</span>
+<span id="cb11-29"><a href="plot-data.html#cb11-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.line =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-30"><a href="plot-data.html#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> legend.pos,</span>
+<span id="cb11-31"><a href="plot-data.html#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.direction =</span> legend.dir,</span>
+<span id="cb11-32"><a href="plot-data.html#cb11-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> font.size),</span>
+<span id="cb11-33"><a href="plot-data.html#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> font.size)</span>
+<span id="cb11-34"><a href="plot-data.html#cb11-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-35"><a href="plot-data.html#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">background_grid</span>(</span>
+<span id="cb11-36"><a href="plot-data.html#cb11-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">major =</span> <span class="st">&quot;yx&quot;</span>,</span>
+<span id="cb11-37"><a href="plot-data.html#cb11-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">minor =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-38"><a href="plot-data.html#cb11-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">colour.major =</span> <span class="st">&quot;grey90&quot;</span>,</span>
+<span id="cb11-39"><a href="plot-data.html#cb11-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">size.major =</span> <span class="fl">0.2</span></span>
+<span id="cb11-40"><a href="plot-data.html#cb11-40" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-41"><a href="plot-data.html#cb11-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
-<div id="plot-standard" class="section level2">
-<h2><span class="header-section-number">3.2</span> Plot standard</h2>
+<div id="plot-standard" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Plot standard<a href="plot-data.html#plot-standard" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now let’s plot the standard:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot.std &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">semilog =</span> <span class="ot">FALSE</span>) {
-  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> standard) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_color_brewer</span>(
-      <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>,
-      <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="st">&quot;Replicate&quot;</span>, <span class="kw">seq</span>(n.repl.std)),
-      <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_y_continuous</span>(
-      <span class="dt">limits =</span> <span class="kw">c</span>(min.absorb, max.absorb <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span> <span class="op">*</span><span class="st"> </span>max.absorb)
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_hline</span>(
-      <span class="dt">yintercept =</span> <span class="kw">mean</span>(blanks<span class="op">$</span>blank),
-      <span class="dt">lty =</span> <span class="dv">2</span>,
-      <span class="dt">color =</span> <span class="st">&quot;grey60&quot;</span>,
-      <span class="dt">lwd =</span> <span class="fl">0.2</span>
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_plot</span>()
-
-  <span class="cf">if</span> (semilog <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) {
-    p &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(concentration, absorbance, <span class="dt">color =</span> replicate), <span class="dt">alpha =</span> <span class="fl">0.6</span>) <span class="op">+</span>
-<span class="st">      </span><span class="kw">labs</span>(
-        <span class="dt">x =</span> <span class="st">&quot;Relative concentration&quot;</span>,
-        <span class="dt">y =</span> <span class="st">&quot;Absorbance (a. u.)&quot;</span>,
-        <span class="dt">title =</span> <span class="st">&quot;IgG in standard serum&quot;</span>
-      ) <span class="op">+</span>
-<span class="st">      </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> concentrations, <span class="dt">labels =</span> scales<span class="op">::</span>percent, <span class="dt">trans =</span> <span class="st">&quot;log2&quot;</span>) <span class="op">+</span>
-<span class="st">      </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,
-        <span class="dt">label =</span> <span class="st">&quot;Blank&quot;</span>,
-        <span class="dt">x =</span> <span class="kw">max</span>(standard<span class="op">$</span>concentration) <span class="op">-</span><span class="st"> </span><span class="fl">0.05</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(standard<span class="op">$</span>concentration),
-        <span class="dt">y =</span> <span class="kw">max</span>(blanks<span class="op">$</span>blank) <span class="op">+</span><span class="st"> </span><span class="dv">20</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(blanks<span class="op">$</span>blank),
-        <span class="dt">size =</span> <span class="fl">3.5</span>,
-        <span class="dt">color =</span> <span class="st">&quot;grey50&quot;</span>
-      )
-  }
-  <span class="cf">else</span> {
-    p &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(
-      <span class="kw">aes</span>(concentration, absorbance, <span class="dt">color =</span> replicate),
-      <span class="dt">alpha =</span> <span class="fl">0.6</span>
-    ) <span class="op">+</span>
-<span class="st">      </span><span class="kw">labs</span>(
-        <span class="dt">x =</span> <span class="st">&quot;Relative concentration&quot;</span>,
-        <span class="dt">y =</span> <span class="st">&quot;Absorbance (a.u.)&quot;</span>,
-        <span class="dt">title =</span> <span class="st">&quot;IgG in standard serum&quot;</span>
-      ) <span class="op">+</span>
-<span class="st">      </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">round</span>(concentrations,<span class="dv">1</span>),
-                         <span class="dt">labels =</span> scales<span class="op">::</span>percent) <span class="op">+</span>
-<span class="st">      </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,
-        <span class="dt">label =</span> <span class="st">&quot;Blank&quot;</span>,
-        <span class="dt">x =</span> <span class="kw">max</span>(standard<span class="op">$</span>concentration) <span class="op">-</span><span class="st"> </span><span class="fl">0.05</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(standard<span class="op">$</span>concentration),
-        <span class="dt">y =</span> <span class="kw">max</span>(blanks<span class="op">$</span>blank) <span class="op">+</span><span class="st"> </span><span class="fl">0.2</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(blanks<span class="op">$</span>blank),
-        <span class="dt">size =</span> <span class="fl">3.5</span>,
-        <span class="dt">color =</span> <span class="st">&quot;grey50&quot;</span>
-      )
-  }
-  p
-}
-<span class="kw">plot.std</span>()</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="plot-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a>plot.std <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">semilog =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb12-2"><a href="plot-data.html#cb12-2" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> standard) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="plot-data.html#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(</span>
+<span id="cb12-4"><a href="plot-data.html#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">palette =</span> <span class="st">&quot;Set1&quot;</span>,</span>
+<span id="cb12-5"><a href="plot-data.html#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">paste</span>(<span class="st">&quot;Replicate&quot;</span>, <span class="fu">seq</span>(n.repl.std)),</span>
+<span id="cb12-6"><a href="plot-data.html#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb12-7"><a href="plot-data.html#cb12-7" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="plot-data.html#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb12-9"><a href="plot-data.html#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">limits =</span> <span class="fu">c</span>(min.absorb, max.absorb <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> max.absorb)</span>
+<span id="cb12-10"><a href="plot-data.html#cb12-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="plot-data.html#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(</span>
+<span id="cb12-12"><a href="plot-data.html#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">yintercept =</span> <span class="fu">mean</span>(blanks<span class="sc">$</span>blank),</span>
+<span id="cb12-13"><a href="plot-data.html#cb12-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">lty =</span> <span class="dv">2</span>,</span>
+<span id="cb12-14"><a href="plot-data.html#cb12-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">&quot;grey60&quot;</span>,</span>
+<span id="cb12-15"><a href="plot-data.html#cb12-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="fl">0.2</span></span>
+<span id="cb12-16"><a href="plot-data.html#cb12-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="plot-data.html#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_plot</span>()</span>
+<span id="cb12-18"><a href="plot-data.html#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="plot-data.html#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (semilog <span class="sc">==</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb12-20"><a href="plot-data.html#cb12-20" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(concentration, absorbance, <span class="at">color =</span> replicate), <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb12-21"><a href="plot-data.html#cb12-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
+<span id="cb12-22"><a href="plot-data.html#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">&quot;Relative concentration&quot;</span>,</span>
+<span id="cb12-23"><a href="plot-data.html#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">&quot;Absorbance (a. u.)&quot;</span>,</span>
+<span id="cb12-24"><a href="plot-data.html#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&quot;IgG in standard serum&quot;</span></span>
+<span id="cb12-25"><a href="plot-data.html#cb12-25" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb12-26"><a href="plot-data.html#cb12-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> concentrations, <span class="at">labels =</span> scales<span class="sc">::</span>percent, <span class="at">trans =</span> <span class="st">&quot;log2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-27"><a href="plot-data.html#cb12-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>,</span>
+<span id="cb12-28"><a href="plot-data.html#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">&quot;Blank&quot;</span>,</span>
+<span id="cb12-29"><a href="plot-data.html#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">max</span>(standard<span class="sc">$</span>concentration) <span class="sc">-</span> <span class="fl">0.05</span> <span class="sc">*</span> <span class="fu">max</span>(standard<span class="sc">$</span>concentration),</span>
+<span id="cb12-30"><a href="plot-data.html#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">max</span>(blanks<span class="sc">$</span>blank) <span class="sc">+</span> <span class="dv">20</span> <span class="sc">*</span> <span class="fu">max</span>(blanks<span class="sc">$</span>blank),</span>
+<span id="cb12-31"><a href="plot-data.html#cb12-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb12-32"><a href="plot-data.html#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">&quot;grey50&quot;</span></span>
+<span id="cb12-33"><a href="plot-data.html#cb12-33" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb12-34"><a href="plot-data.html#cb12-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-35"><a href="plot-data.html#cb12-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> {</span>
+<span id="cb12-36"><a href="plot-data.html#cb12-36" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">geom_point</span>(</span>
+<span id="cb12-37"><a href="plot-data.html#cb12-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(concentration, absorbance, <span class="at">color =</span> replicate),</span>
+<span id="cb12-38"><a href="plot-data.html#cb12-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.6</span></span>
+<span id="cb12-39"><a href="plot-data.html#cb12-39" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb12-40"><a href="plot-data.html#cb12-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
+<span id="cb12-41"><a href="plot-data.html#cb12-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">&quot;Relative concentration&quot;</span>,</span>
+<span id="cb12-42"><a href="plot-data.html#cb12-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">&quot;Absorbance (a.u.)&quot;</span>,</span>
+<span id="cb12-43"><a href="plot-data.html#cb12-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&quot;IgG in standard serum&quot;</span></span>
+<span id="cb12-44"><a href="plot-data.html#cb12-44" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb12-45"><a href="plot-data.html#cb12-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">round</span>(concentrations,<span class="dv">1</span>),</span>
+<span id="cb12-46"><a href="plot-data.html#cb12-46" aria-hidden="true" tabindex="-1"></a>                         <span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb12-47"><a href="plot-data.html#cb12-47" aria-hidden="true" tabindex="-1"></a>      <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>,</span>
+<span id="cb12-48"><a href="plot-data.html#cb12-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">&quot;Blank&quot;</span>,</span>
+<span id="cb12-49"><a href="plot-data.html#cb12-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">max</span>(standard<span class="sc">$</span>concentration) <span class="sc">-</span> <span class="fl">0.05</span> <span class="sc">*</span> <span class="fu">max</span>(standard<span class="sc">$</span>concentration),</span>
+<span id="cb12-50"><a href="plot-data.html#cb12-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">max</span>(blanks<span class="sc">$</span>blank) <span class="sc">+</span> <span class="fl">0.2</span> <span class="sc">*</span> <span class="fu">max</span>(blanks<span class="sc">$</span>blank),</span>
+<span id="cb12-51"><a href="plot-data.html#cb12-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb12-52"><a href="plot-data.html#cb12-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">&quot;grey50&quot;</span></span>
+<span id="cb12-53"><a href="plot-data.html#cb12-53" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb12-54"><a href="plot-data.html#cb12-54" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-55"><a href="plot-data.html#cb12-55" aria-hidden="true" tabindex="-1"></a>  p</span>
+<span id="cb12-56"><a href="plot-data.html#cb12-56" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-57"><a href="plot-data.html#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.std</span>()</span></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/plot-std-1.png" width="672" /></p>
 <p>We see that the concentration of the dilution series is on a logarithmic scale. Let’s replot the results with <span class="math inline">\(\log_2\)</span>-transformed concentrations (<span class="math inline">\(\log_2\)</span> for a dilution factor of 2):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot.std</span>(<span class="dt">semilog =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="plot-data.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.std</span>(<span class="at">semilog =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/plot-std-log-1.png" width="672" /></p>
 </div>
-<div id="plot-biological-samples" class="section level2">
-<h2><span class="header-section-number">3.3</span> Plot biological samples</h2>
+<div id="plot-biological-samples" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Plot biological samples<a href="plot-data.html#plot-biological-samples" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now let’s have a look at our actual data. We measured IgG in serum of four donors on five different time points. We first define a plot for our biological samples and then plot it together with the standard curve to have a better overview.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># select HV</span>
-ID.selected &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;BD1989&quot;</span>, <span class="st">&quot;MS1984&quot;</span>, <span class="st">&quot;SM1988&quot;</span>, <span class="st">&quot;HJ1992&quot;</span>)
-
-donors.av &lt;-<span class="st"> </span>donors.av <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">ID =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;BD1989&quot;</span>, <span class="dv">5</span>), <span class="kw">rep</span>(<span class="st">&quot;MS1984&quot;</span>, <span class="dv">5</span>), <span class="kw">rep</span>( <span class="st">&quot;SM1988&quot;</span>, <span class="dv">5</span>), <span class="kw">rep</span>(<span class="st">&quot;HJ1992&quot;</span>, <span class="dv">5</span>)))
-donors.av</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="plot-data.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select biological samples</span></span>
+<span id="cb14-2"><a href="plot-data.html#cb14-2" aria-hidden="true" tabindex="-1"></a>ID.selected <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;AB1981&quot;</span>, <span class="st">&quot;CD1982&quot;</span>, <span class="st">&quot;EF1983&quot;</span>, <span class="st">&quot;GH1984&quot;</span>)</span>
+<span id="cb14-3"><a href="plot-data.html#cb14-3" aria-hidden="true" tabindex="-1"></a>donors.av <span class="ot">&lt;-</span> donors.av <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">ID =</span> <span class="fu">rep</span>(ID.selected, <span class="at">each =</span> <span class="dv">5</span>))</span>
+<span id="cb14-4"><a href="plot-data.html#cb14-4" aria-hidden="true" tabindex="-1"></a>donors.av</span></code></pre></div>
 <pre><code>## # A tibble: 20 x 4
 ##    donor  time absorbance.av ID    
 ##    &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt; &lt;chr&gt; 
-##  1 1         0         0.236 BD1989
-##  2 1         7         0.497 BD1989
-##  3 1        30         0.660 BD1989
-##  4 1        60         0.804 BD1989
-##  5 1       180         0.382 BD1989
-##  6 2         0         0.434 MS1984
-##  7 2         7         0.629 MS1984
-##  8 2        30         0.776 MS1984
-##  9 2        60         0.760 MS1984
-## 10 2       180         0.660 MS1984
-## 11 3         0         0.347 SM1988
-## 12 3         7         1.25  SM1988
-## 13 3        30         0.837 SM1988
-## 14 3        60         0.768 SM1988
-## 15 3       180         0.563 SM1988
-## 16 4         0         0.932 HJ1992
-## 17 4         7         1.17  HJ1992
-## 18 4        30         1.01  HJ1992
-## 19 4        60         0.845 HJ1992
-## 20 4       180         0.950 HJ1992</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot.donors &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data =</span> donors.av, 
-      <span class="kw">aes</span>(time, absorbance.av, <span class="dt">color =</span> donor), <span class="dt">alpha =</span> <span class="fl">0.7</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">data =</span> donors.av, 
-      <span class="kw">aes</span>(time, absorbance.av, <span class="dt">group =</span> donor, <span class="dt">color =</span> donor), <span class="dt">alpha =</span> <span class="fl">0.6</span>, <span class="dt">lwd =</span> <span class="fl">0.5</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">labs</span>(
-      <span class="dt">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Absorbance (a. u.)&quot;</span>,
-      <span class="dt">title =</span> <span class="st">&quot;IgG in serum of healthy volunteers&quot;</span>
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_color_viridis</span>(
-      <span class="dt">begin =</span> <span class="fl">0.2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>, <span class="dt">discrete =</span> <span class="ot">TRUE</span>,
-      <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="kw">seq</span>(n.donors)), <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(min.absorb, max.absorb <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span> <span class="op">*</span><span class="st"> </span>max.absorb)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> tpoints) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_hline</span>(
-      <span class="dt">yintercept =</span> <span class="kw">mean</span>(blanks<span class="op">$</span>blank),
-      <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&quot;grey60&quot;</span>, <span class="dt">lwd =</span> <span class="fl">0.2</span>
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>,
-      <span class="dt">label =</span> <span class="st">&quot;Blank&quot;</span>,
-      <span class="dt">x =</span> <span class="kw">max</span>(donors<span class="op">$</span>time) <span class="op">-</span><span class="st"> </span><span class="fl">0.1</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(donors<span class="op">$</span>time),
-      <span class="dt">y =</span> <span class="kw">max</span>(blanks<span class="op">$</span>blank) <span class="op">+</span><span class="st"> </span><span class="dv">20</span> <span class="op">*</span><span class="st"> </span><span class="kw">max</span>(blanks<span class="op">$</span>blank),
-      <span class="dt">size =</span> <span class="fl">3.5</span>, <span class="dt">color =</span> <span class="st">&quot;grey50&quot;</span>
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">background_grid</span>(
-      <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span>
-    ) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_plot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">2</span>)</code></pre></div>
+##  1 1         0         0.336 AB1981
+##  2 1         7         0.596 AB1981
+##  3 1        30         0.710 AB1981
+##  4 1        60         0.804 AB1981
+##  5 1       180         0.482 AB1981
+##  6 2         0         0.534 CD1982
+##  7 2         7         0.729 CD1982
+##  8 2        30         0.825 CD1982
+##  9 2        60         0.790 CD1982
+## 10 2       180         0.660 CD1982
+## 11 3         0         0.347 EF1983
+## 12 3         7         1.25  EF1983
+## 13 3        30         0.837 EF1983
+## 14 3        60         0.768 EF1983
+## 15 3       180         0.563 EF1983
+## 16 4         0         0.932 GH1984
+## 17 4         7         1.17  GH1984
+## 18 4        30         1.01  GH1984
+## 19 4        60         0.845 GH1984
+## 20 4       180         0.950 GH1984</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="plot-data.html#cb16-1" aria-hidden="true" tabindex="-1"></a>plot.donors <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-2"><a href="plot-data.html#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> donors.av, </span>
+<span id="cb16-3"><a href="plot-data.html#cb16-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(time, absorbance.av, <span class="at">color =</span> donor), <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="plot-data.html#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> donors.av, </span>
+<span id="cb16-5"><a href="plot-data.html#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(time, absorbance.av, <span class="at">group =</span> donor, <span class="at">color =</span> donor), <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">lwd =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="plot-data.html#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb16-7"><a href="plot-data.html#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Absorbance (a. u.)&quot;</span>,</span>
+<span id="cb16-8"><a href="plot-data.html#cb16-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;[Illustrative example] IgG in serum after vaccination&quot;</span></span>
+<span id="cb16-9"><a href="plot-data.html#cb16-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="plot-data.html#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis</span>(</span>
+<span id="cb16-11"><a href="plot-data.html#cb16-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">begin =</span> <span class="fl">0.2</span>, <span class="at">end =</span> <span class="fl">0.8</span>, <span class="at">discrete =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-12"><a href="plot-data.html#cb16-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="fu">seq</span>(n.donors)), <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb16-13"><a href="plot-data.html#cb16-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="plot-data.html#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(min.absorb, max.absorb <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> max.absorb)) <span class="sc">+</span></span>
+<span id="cb16-15"><a href="plot-data.html#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> tpoints) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="plot-data.html#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(</span>
+<span id="cb16-17"><a href="plot-data.html#cb16-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">yintercept =</span> <span class="fu">mean</span>(blanks<span class="sc">$</span>blank),</span>
+<span id="cb16-18"><a href="plot-data.html#cb16-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">&quot;grey60&quot;</span>, <span class="at">lwd =</span> <span class="fl">0.2</span></span>
+<span id="cb16-19"><a href="plot-data.html#cb16-19" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb16-20"><a href="plot-data.html#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>,</span>
+<span id="cb16-21"><a href="plot-data.html#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="st">&quot;Blank&quot;</span>,</span>
+<span id="cb16-22"><a href="plot-data.html#cb16-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">max</span>(donors<span class="sc">$</span>time) <span class="sc">-</span> <span class="fl">0.1</span> <span class="sc">*</span> <span class="fu">max</span>(donors<span class="sc">$</span>time),</span>
+<span id="cb16-23"><a href="plot-data.html#cb16-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">max</span>(blanks<span class="sc">$</span>blank) <span class="sc">+</span> <span class="dv">20</span> <span class="sc">*</span> <span class="fu">max</span>(blanks<span class="sc">$</span>blank),</span>
+<span id="cb16-24"><a href="plot-data.html#cb16-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">color =</span> <span class="st">&quot;grey50&quot;</span></span>
+<span id="cb16-25"><a href="plot-data.html#cb16-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="plot-data.html#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">background_grid</span>(</span>
+<span id="cb16-27"><a href="plot-data.html#cb16-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="at">minor =</span> <span class="st">&quot;&quot;</span>, <span class="at">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">size.major =</span> <span class="fl">0.2</span></span>
+<span id="cb16-28"><a href="plot-data.html#cb16-28" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb16-29"><a href="plot-data.html#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_plot</span>()</span></code></pre></div>
 </div>
-<div id="combine-plots" class="section level2">
-<h2><span class="header-section-number">3.4</span> Combine plots</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_grid</span>(<span class="kw">plot.std</span>(<span class="dt">semilog =</span> <span class="ot">TRUE</span>), plot.donors, <span class="dt">ncol =</span> <span class="dv">1</span>)</code></pre></div>
+<div id="combine-plots" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Combine plots<a href="plot-data.html#combine-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="plot-data.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(<span class="fu">plot.std</span>(<span class="at">semilog =</span> <span class="cn">TRUE</span>), plot.donors, <span class="at">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/plot-grid-1.png" width="672" /></p>
 
 </div>
@@ -331,12 +371,13 @@ donors.av</code></pre></div>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -344,12 +385,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -360,7 +401,19 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["analyse-ELISA.pdf", "analyse-ELISA.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -373,10 +426,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

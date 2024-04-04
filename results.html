@@ -1,45 +1,46 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Analyse ELISA data in R</title>
-  <meta name="description" content="Analyse ELISA data in <em>R</em>">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Results | Analyse ELISA data in R</title>
+  <meta name="description" content="5 Results | Analyse ELISA data in R" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Analyse ELISA data in R" />
+  <meta property="og:title" content="5 Results | Analyse ELISA data in R" />
   <meta property="og:type" content="book" />
-  
   
   
   <meta name="github-repo" content="janalin/ELISA-analysis" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Analyse ELISA data in R" />
+  <meta name="twitter:title" content="5 Results | Analyse ELISA data in R" />
   
   
   
 
-<meta name="author" content="JL">
+<meta name="author" content="JL" />
 
 
-<meta name="date" content="2018-11-27">
+<meta name="date" content="2018-11-27" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="calibration.html">
-<link rel="next" href="overview.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="calibration.html"/>
+<link rel="next" href="overview.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,44 +48,80 @@
 
 
 
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -103,23 +140,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="https://janalin.github.io/analyse-ELISA/">Analyse ELISA data in R</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#about-the-experiment-in-brief"><i class="fa fa-check"></i><b>1.1</b> About the experiment in brief</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-fiele"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel fiele</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#set-cell-indices-and-set-experimental-parameteres"><i class="fa fa-check"></i><b>1.3</b> Set cell indices and set experimental parameteres</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="correct-data.html"><a href="correct-data.html"><i class="fa fa-check"></i><b>2</b> Correct data</a></li>
-<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a><ul>
+<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="plot-data.html"><a href="plot-data.html#define-plot-theme"><i class="fa fa-check"></i><b>3.1</b> Define plot theme</a></li>
 <li class="chapter" data-level="3.2" data-path="plot-data.html"><a href="plot-data.html#plot-standard"><i class="fa fa-check"></i><b>3.2</b> Plot standard</a></li>
 <li class="chapter" data-level="3.3" data-path="plot-data.html"><a href="plot-data.html#plot-biological-samples"><i class="fa fa-check"></i><b>3.3</b> Plot biological samples</a></li>
 <li class="chapter" data-level="3.4" data-path="plot-data.html"><a href="plot-data.html#combine-plots"><i class="fa fa-check"></i><b>3.4</b> Combine plots</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a><ul>
+<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="calibration.html"><a href="calibration.html#the-four-parameter-logistic-curve"><i class="fa fa-check"></i><b>4.1</b> The four-parameter logistic curve</a></li>
 <li class="chapter" data-level="4.2" data-path="calibration.html"><a href="calibration.html#regression-of-the-standard"><i class="fa fa-check"></i><b>4.2</b> Regression of the standard</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#compute-concentrations"><i class="fa fa-check"></i><b>5.1</b> Compute concentrations</a></li>
 <li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#plot-results"><i class="fa fa-check"></i><b>5.2</b> Plot results</a></li>
 </ul></li>
@@ -141,76 +182,75 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="results" class="section level1">
-<h1><span class="header-section-number">5</span> Results</h1>
-<div id="compute-concentrations" class="section level2">
-<h2><span class="header-section-number">5.1</span> Compute concentrations</h2>
+<div id="results" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Results<a href="results.html#results" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="compute-concentrations" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Compute concentrations<a href="results.html#compute-concentrations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Rearranging the 4-PL equation for concentration <span class="math inline">\(c\)</span> gives:</p>
 <p><span class="math display">\[\log_2{c} =  \dfrac{1}{n} \left[ \log{\left( \dfrac{\mathrm{A_{max}} - A}{A - \mathrm{A_{min}}}\right)} + n \cdot \log_2{\mathrm{EC_{50}}} \right] \]</span>.</p>
 <p>We compute the concentrations of our biological samples using the estimated calibration curve and plot the results:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">log2concentration.est &lt;-<span class="st"> </span><span class="kw">sapply</span>(donors.av<span class="op">$</span>absorbance.av,
-  <span class="cf">function</span>(A)
-  (<span class="dv">1</span><span class="op">/</span>n.est) <span class="op">*</span><span class="st"> </span>(<span class="kw">log</span>( ((Amax.est <span class="op">-</span><span class="st"> </span>A)<span class="op">/</span>(A <span class="op">-</span><span class="st"> </span>Amin))) <span class="op">+</span><span class="st"> </span>log2EC50.est<span class="op">*</span>n.est))
-
-<span class="co"># Get confidence intervals</span>
-fgh &lt;-<span class="st"> </span><span class="kw">deriv</span>(
-  log2concentration <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>n) <span class="op">*</span><span class="st"> </span>(<span class="kw">log</span>( ((Amax <span class="op">-</span><span class="st"> </span>A)<span class="op">/</span>(A <span class="op">-</span><span class="st"> </span>Amin))) <span class="op">+</span><span class="st"> </span>log2EC50<span class="op">*</span>n),
-  <span class="kw">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}
-)
-f.new &lt;-<span class="st"> </span><span class="kw">fgh</span>(Amax.est, log2EC50.est, n.est, donors.av<span class="op">$</span>absorbance.av)
-g.new &lt;-<span class="st"> </span><span class="kw">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)
-gs &lt;-<span class="st"> </span><span class="kw">rowSums</span>((g.new <span class="op">%*%</span><span class="st"> </span>cov.fit) <span class="op">*</span><span class="st"> </span>g.new)
-alpha &lt;-<span class="st"> </span><span class="fl">0.05</span>
-delta.f &lt;-<span class="st"> </span><span class="kw">sqrt</span>(gs) <span class="op">*</span><span class="st"> </span><span class="kw">qt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha<span class="op">/</span><span class="dv">2</span>, <span class="dv">15</span>)
-results &lt;-<span class="st"> </span>donors.av <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">concentration.est =</span> <span class="dv">2</span><span class="op">^</span>log2concentration.est) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2concentration.est =</span> log2concentration.est) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">log2conf =</span> delta.f) 
-
-<span class="co"># Inspect results</span>
-<span class="kw">head</span>(results)</code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="results.html#cb30-1" aria-hidden="true" tabindex="-1"></a>log2concentration.est <span class="ot">&lt;-</span> <span class="fu">sapply</span>(donors.av<span class="sc">$</span>absorbance.av,</span>
+<span id="cb30-2"><a href="results.html#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(A)</span>
+<span id="cb30-3"><a href="results.html#cb30-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="sc">/</span>n.est) <span class="sc">*</span> (<span class="fu">log</span>( ((Amax.est <span class="sc">-</span> A)<span class="sc">/</span>(A <span class="sc">-</span> Amin))) <span class="sc">+</span> log2EC50.est<span class="sc">*</span>n.est))</span>
+<span id="cb30-4"><a href="results.html#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="results.html#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get confidence intervals</span></span>
+<span id="cb30-6"><a href="results.html#cb30-6" aria-hidden="true" tabindex="-1"></a>fgh <span class="ot">&lt;-</span> <span class="fu">deriv</span>(</span>
+<span id="cb30-7"><a href="results.html#cb30-7" aria-hidden="true" tabindex="-1"></a>  log2concentration <span class="sc">~</span> (<span class="dv">1</span><span class="sc">/</span>n) <span class="sc">*</span> (<span class="fu">log</span>( ((Amax <span class="sc">-</span> A)<span class="sc">/</span>(A <span class="sc">-</span> Amin))) <span class="sc">+</span> log2EC50<span class="sc">*</span>n),</span>
+<span id="cb30-8"><a href="results.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}</span>
+<span id="cb30-9"><a href="results.html#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-10"><a href="results.html#cb30-10" aria-hidden="true" tabindex="-1"></a>f.new <span class="ot">&lt;-</span> <span class="fu">fgh</span>(Amax.est, log2EC50.est, n.est, donors.av<span class="sc">$</span>absorbance.av)</span>
+<span id="cb30-11"><a href="results.html#cb30-11" aria-hidden="true" tabindex="-1"></a>g.new <span class="ot">&lt;-</span> <span class="fu">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</span>
+<span id="cb30-12"><a href="results.html#cb30-12" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">rowSums</span>((g.new <span class="sc">%*%</span> cov.fit) <span class="sc">*</span> g.new)</span>
+<span id="cb30-13"><a href="results.html#cb30-13" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb30-14"><a href="results.html#cb30-14" aria-hidden="true" tabindex="-1"></a>delta.f <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(gs) <span class="sc">*</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="dv">15</span>)</span>
+<span id="cb30-15"><a href="results.html#cb30-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> donors.av <span class="sc">%&gt;%</span> </span>
+<span id="cb30-16"><a href="results.html#cb30-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">concentration.est =</span> <span class="dv">2</span><span class="sc">^</span>log2concentration.est) <span class="sc">%&gt;%</span></span>
+<span id="cb30-17"><a href="results.html#cb30-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">log2concentration.est =</span> log2concentration.est) <span class="sc">%&gt;%</span></span>
+<span id="cb30-18"><a href="results.html#cb30-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">log2conf =</span> delta.f) </span>
+<span id="cb30-19"><a href="results.html#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="results.html#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect results</span></span>
+<span id="cb30-21"><a href="results.html#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(results)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 7
-##   donor  time absorbance.av ID    concentration.e… log2concentrati…
-##   &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-## 1 1         0         0.236 BD19…           0.0467            -4.42
-## 2 1         7         0.497 BD19…           0.108             -3.22
-## 3 1        30         0.660 BD19…           0.154             -2.70
-## 4 1        60         0.804 BD19…           0.203             -2.30
-## 5 1       180         0.382 BD19…           0.0792            -3.66
-## 6 2         0         0.434 MS19…           0.0918            -3.45
-## # ... with 1 more variable: log2conf &lt;dbl&gt;</code></pre>
+##   donor  time absorbance.av ID     concentration.est log2concentration… log2conf
+##   &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;              &lt;dbl&gt;    &lt;dbl&gt;
+## 1 1         0         0.336 AB1981            0.0685              -3.87    0.241
+## 2 1         7         0.596 AB1981            0.135               -2.89    0.155
+## 3 1        30         0.710 AB1981            0.170               -2.56    0.147
+## 4 1        60         0.804 AB1981            0.203               -2.30    0.147
+## 5 1       180         0.482 AB1981            0.104               -3.27    0.178
+## 6 2         0         0.534 CD1982            0.118               -3.09    0.165</code></pre>
 </div>
-<div id="plot-results" class="section level2">
-<h2><span class="header-section-number">5.2</span> Plot results</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot.results &lt;-<span class="st"> </span><span class="kw">ggplot</span>(
-    <span class="dt">data =</span> results,
-    <span class="kw">aes</span>(time, concentration.est, <span class="dt">color =</span> donor)
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(time, concentration.est, <span class="dt">group =</span> donor), 
-    <span class="dt">alpha =</span> <span class="fl">0.6</span>, <span class="dt">lwd =</span> <span class="fl">0.5</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;Relative concentration&quot;</span>,
-    <span class="dt">title =</span> <span class="st">&quot;IgG serum of in healthy volunteers&quot;</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_color_viridis</span>(
-    <span class="dt">begin =</span> <span class="fl">0.2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>, <span class="dt">discrete =</span> <span class="ot">TRUE</span>,
-    <span class="dt">labels =</span> <span class="kw">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="kw">seq</span>(n.donors)), <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> tpoints) <span class="op">+</span>
-<span class="st">  </span><span class="kw">background_grid</span>(
-    <span class="dt">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="dt">minor =</span> <span class="st">&quot;&quot;</span>, <span class="dt">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="dt">size.major =</span> <span class="fl">0.2</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_plot</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_pointrange</span>(
-    <span class="kw">aes</span>(<span class="dt">ymin =</span> concentration.est <span class="op">/</span><span class="st"> </span><span class="dv">2</span><span class="op">^</span>log2conf, 
-        <span class="dt">ymax =</span> concentration.est <span class="op">*</span><span class="st"> </span><span class="dv">2</span><span class="op">^</span>log2conf), 
-    <span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">size =</span> <span class="fl">0.4</span>
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span>percent)
-
-plot.results</code></pre></div>
+<div id="plot-results" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Plot results<a href="results.html#plot-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="results.html#cb32-1" aria-hidden="true" tabindex="-1"></a>plot.results <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb32-2"><a href="results.html#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> results,</span>
+<span id="cb32-3"><a href="results.html#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(time, concentration.est, <span class="at">color =</span> donor)</span>
+<span id="cb32-4"><a href="results.html#cb32-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-5"><a href="results.html#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(time, concentration.est, <span class="at">group =</span> donor), </span>
+<span id="cb32-6"><a href="results.html#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">lwd =</span> <span class="fl">0.5</span></span>
+<span id="cb32-7"><a href="results.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-8"><a href="results.html#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-9"><a href="results.html#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Days after vaccination&quot;</span>,</span>
+<span id="cb32-10"><a href="results.html#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Relative concentration&quot;</span>,</span>
+<span id="cb32-11"><a href="results.html#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;[Illustrative example] IgG in serum after vaccination&quot;</span></span>
+<span id="cb32-12"><a href="results.html#cb32-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-13"><a href="results.html#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(</span>
+<span id="cb32-14"><a href="results.html#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">begin =</span> <span class="fl">0.2</span>, <span class="at">end =</span> <span class="fl">0.8</span>, <span class="at">discrete =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb32-15"><a href="results.html#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">paste</span>(<span class="st">&quot;Donor&quot;</span>, <span class="fu">seq</span>(n.donors)), <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb32-16"><a href="results.html#cb32-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-17"><a href="results.html#cb32-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> tpoints) <span class="sc">+</span></span>
+<span id="cb32-18"><a href="results.html#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">background_grid</span>(</span>
+<span id="cb32-19"><a href="results.html#cb32-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">major =</span> <span class="st">&quot;yx&quot;</span>, <span class="at">minor =</span> <span class="st">&quot;&quot;</span>, <span class="at">colour.major =</span> <span class="st">&quot;grey90&quot;</span>, <span class="at">size.major =</span> <span class="fl">0.2</span></span>
+<span id="cb32-20"><a href="results.html#cb32-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-21"><a href="results.html#cb32-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_plot</span>() <span class="sc">+</span></span>
+<span id="cb32-22"><a href="results.html#cb32-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(</span>
+<span id="cb32-23"><a href="results.html#cb32-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> concentration.est <span class="sc">/</span> <span class="dv">2</span><span class="sc">^</span>log2conf, </span>
+<span id="cb32-24"><a href="results.html#cb32-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">ymax =</span> concentration.est <span class="sc">*</span> <span class="dv">2</span><span class="sc">^</span>log2conf), </span>
+<span id="cb32-25"><a href="results.html#cb32-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="fl">0.4</span></span>
+<span id="cb32-26"><a href="results.html#cb32-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-27"><a href="results.html#cb32-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent)</span>
+<span id="cb32-28"><a href="results.html#cb32-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-29"><a href="results.html#cb32-29" aria-hidden="true" tabindex="-1"></a>plot.results</span></code></pre></div>
 <p><img src="analyse-ELISA_files/figure-html/plot-results-1.png" width="672" /></p>
 
 </div>
@@ -225,12 +265,13 @@ plot.results</code></pre></div>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -238,12 +279,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -254,7 +295,19 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["analyse-ELISA.pdf", "analyse-ELISA.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -267,10 +320,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

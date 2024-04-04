@@ -1,45 +1,46 @@
 <!DOCTYPE html>
-<html >
-
+<html lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Analyse ELISA data in R</title>
-  <meta name="description" content="Analyse ELISA data in <em>R</em>">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Correct data | Analyse ELISA data in R</title>
+  <meta name="description" content="2 Correct data | Analyse ELISA data in R" />
+  <meta name="generator" content="bookdown 0.38 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Analyse ELISA data in R" />
+  <meta property="og:title" content="2 Correct data | Analyse ELISA data in R" />
   <meta property="og:type" content="book" />
-  
   
   
   <meta name="github-repo" content="janalin/ELISA-analysis" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Analyse ELISA data in R" />
+  <meta name="twitter:title" content="2 Correct data | Analyse ELISA data in R" />
   
   
   
 
-<meta name="author" content="JL">
+<meta name="author" content="JL" />
 
 
-<meta name="date" content="2018-11-27">
+<meta name="date" content="2018-11-27" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html">
-<link rel="next" href="plot-data.html">
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="prev" href="index.html"/>
+<link rel="next" href="plot-data.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,44 +48,80 @@
 
 
 
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -103,23 +140,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="https://janalin.github.io/analyse-ELISA/">Analyse ELISA data in R</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#about-the-experiment-in-brief"><i class="fa fa-check"></i><b>1.1</b> About the experiment in brief</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-fiele"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel fiele</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#set-cell-indices-and-set-experimental-parameteres"><i class="fa fa-check"></i><b>1.3</b> Set cell indices and set experimental parameteres</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="correct-data.html"><a href="correct-data.html"><i class="fa fa-check"></i><b>2</b> Correct data</a></li>
-<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a><ul>
+<li class="chapter" data-level="3" data-path="plot-data.html"><a href="plot-data.html"><i class="fa fa-check"></i><b>3</b> Plot data</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="plot-data.html"><a href="plot-data.html#define-plot-theme"><i class="fa fa-check"></i><b>3.1</b> Define plot theme</a></li>
 <li class="chapter" data-level="3.2" data-path="plot-data.html"><a href="plot-data.html#plot-standard"><i class="fa fa-check"></i><b>3.2</b> Plot standard</a></li>
 <li class="chapter" data-level="3.3" data-path="plot-data.html"><a href="plot-data.html#plot-biological-samples"><i class="fa fa-check"></i><b>3.3</b> Plot biological samples</a></li>
 <li class="chapter" data-level="3.4" data-path="plot-data.html"><a href="plot-data.html#combine-plots"><i class="fa fa-check"></i><b>3.4</b> Combine plots</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a><ul>
+<li class="chapter" data-level="4" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>4</b> Estimate calibration curve</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="calibration.html"><a href="calibration.html#the-four-parameter-logistic-curve"><i class="fa fa-check"></i><b>4.1</b> The four-parameter logistic curve</a></li>
 <li class="chapter" data-level="4.2" data-path="calibration.html"><a href="calibration.html#regression-of-the-standard"><i class="fa fa-check"></i><b>4.2</b> Regression of the standard</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a><ul>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a>
+<ul>
 <li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#compute-concentrations"><i class="fa fa-check"></i><b>5.1</b> Compute concentrations</a></li>
 <li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#plot-results"><i class="fa fa-check"></i><b>5.2</b> Plot results</a></li>
 </ul></li>
@@ -141,98 +182,98 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="correct-data" class="section level1">
-<h1><span class="header-section-number">2</span> Correct data</h1>
+<div id="correct-data" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Correct data<a href="correct-data.html#correct-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>First, we define functions to 1) get background-corrected values of our samples, 2) compute the standard concentrations, and 3) to get tidy data frames of the standard and the biological samples.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Gets samples, performs background correction</span>
-<span class="co"># Works only on single rows of the 96-well plate</span>
-<span class="co"># The number of columns is user defined (set n.cols)</span>
-<span class="co">#&#39; @param data input data frame</span>
-<span class="co">#&#39; @param row.idx row index in the input data frame of the sample</span>
-<span class="co">#&#39; @param col.dix column index in the input data frame of the first cell of the sample</span>
-<span class="co">#&#39; @param n.cols number of columns to get in the input data frame</span>
-<span class="co">#&#39; @return a data frame with background-corrected values</span>
-correct.sample &lt;-<span class="st"> </span><span class="cf">function</span>(data, row.idx, col.idx, n.cols) {
-  row.end &lt;-<span class="st"> </span>row.idx <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="co"># we select only two rows (450 nm and 620 nm measurements)</span>
-  col.end &lt;-<span class="st"> </span>col.idx <span class="op">+</span><span class="st"> </span>(n.cols <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="co"># the number of columns is user defined</span>
-  sample &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
-<span class="st">    </span>.[row.idx<span class="op">:</span>row.end, col.idx<span class="op">:</span>col.end]
-  corr.sample &lt;-<span class="st"> </span>sample[<span class="dv">1</span>, ] <span class="op">-</span><span class="st"> </span>sample[<span class="dv">2</span>, ]
-  <span class="kw">return</span>(<span class="kw">as.tibble</span>(corr.sample))
-}
-
-<span class="co"># Compute dilution series</span>
-<span class="co">#&#39; @param max.conc.std maximal concentration</span>
-<span class="co">#&#39; @param n.dilutions number of dilutions performed</span>
-<span class="co">#&#39; @param dilution.fact dilution factor</span>
-<span class="co">#&#39; @return a vector with concentrations</span>
-comp.conc &lt;-<span class="st"> </span><span class="cf">function</span>(
-  <span class="dt">max.conc.std =</span> max.conc.std, 
-  <span class="dt">n.dilutions =</span> n.dilutions, 
-  <span class="dt">dilution.fact =</span> dilution.fact) {
-  dilutions &lt;-<span class="st"> </span><span class="kw">sapply</span>(
-    <span class="kw">seq</span>(<span class="dv">0</span>, (n.dilutions <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)),
-    <span class="cf">function</span>(x) max.conc.std <span class="op">/</span><span class="st"> </span>(dilution.fact<span class="op">^</span>x)
-  )
-  <span class="kw">return</span>(dilutions)
-}
-
-<span class="co"># Get background-corrected standard</span>
-<span class="co"># </span><span class="al">TODO</span><span class="co">: add documentation</span>
-get.standard &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">data =</span> data,
-                         <span class="dt">row.idx =</span> row.idx.std,
-                         <span class="dt">col.idx =</span> col.idx.std,
-                         <span class="dt">n.dilutions =</span> n.dilutions,
-                         <span class="dt">n.repl =</span> n.repl,
-                         <span class="dt">dilution.fact =</span> dilution.fact,
-                         <span class="dt">max.conc.std =</span> max.conc.std, 
-                         <span class="dt">concentration =</span> concentrations) {
-  row.end &lt;-<span class="st"> </span>row.idx <span class="op">+</span><span class="st"> </span>(n.dilutions <span class="op">*</span><span class="st"> </span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
-  col.end &lt;-<span class="st"> </span>col.idx <span class="op">+</span><span class="st"> </span>(n.repl <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
-  standard &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>.[row.idx<span class="op">:</span>row.end, col.idx<span class="op">:</span>col.end]
-  corr.standard &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map_df</span>(
-    <span class="kw">seq</span>(<span class="dv">1</span>, row.end, <span class="dt">by =</span> <span class="dv">2</span>),
-    <span class="op">~</span><span class="st"> </span><span class="kw">correct.sample</span>(<span class="dt">data =</span> standard, ., <span class="dt">col.idx =</span> <span class="dv">1</span>, <span class="dt">n.cols =</span> n.repl)
-  ) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">setNames</span>(<span class="kw">seq</span>(n.repl)) <span class="op">%&gt;%</span>
-<span class="st">    </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">concentration =</span> concentrations) <span class="op">%&gt;%</span>
-<span class="st">    </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> replicate, <span class="dt">value =</span> absorbance, <span class="op">-</span>concentration)
-
-  <span class="kw">return</span>(corr.standard)
-}
-
-<span class="co"># </span><span class="al">TODO</span><span class="co">: add documentation</span>
-get.donors &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">row.idx =</span> row.idx.donor.<span class="dv">1</span>,
-                       <span class="dt">col.idx =</span> col.idx.donor.<span class="dv">1</span>,
-                       <span class="dt">n.cols =</span> n.repl.donors <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(tpoints)) {
-  row.end &lt;-<span class="st"> </span>row.idx <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="co"># 450 nm and 620 nm</span>
-  col.end &lt;-<span class="st"> </span>col.idx <span class="op">+</span><span class="st"> </span>(n.cols <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
-  sample &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>.[row.idx<span class="op">:</span>row.end, col.idx<span class="op">:</span>col.end]
-  corr.donors &lt;-<span class="st"> </span><span class="kw">correct.sample</span>(
-    <span class="dt">data =</span> sample, <span class="dt">row.idx =</span> <span class="dv">1</span>, <span class="dt">col.idx =</span> <span class="dv">1</span>, <span class="dt">n.cols =</span> n.cols
-  )
-  <span class="kw">return</span>(corr.donors)
-} </code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="correct-data.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gets samples, performs background correction</span></span>
+<span id="cb4-2"><a href="correct-data.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Works only on single rows of the 96-well plate</span></span>
+<span id="cb4-3"><a href="correct-data.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The number of columns is user defined (set n.cols)</span></span>
+<span id="cb4-4"><a href="correct-data.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param data input data frame</span></span>
+<span id="cb4-5"><a href="correct-data.html#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param row.idx row index in the input data frame of the sample</span></span>
+<span id="cb4-6"><a href="correct-data.html#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param col.dix column index in the input data frame of the first cell of the sample</span></span>
+<span id="cb4-7"><a href="correct-data.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param n.cols number of columns to get in the input data frame</span></span>
+<span id="cb4-8"><a href="correct-data.html#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return a data frame with background-corrected values</span></span>
+<span id="cb4-9"><a href="correct-data.html#cb4-9" aria-hidden="true" tabindex="-1"></a>correct.sample <span class="ot">&lt;-</span> <span class="cf">function</span>(data, row.idx, col.idx, n.cols) {</span>
+<span id="cb4-10"><a href="correct-data.html#cb4-10" aria-hidden="true" tabindex="-1"></a>  row.end <span class="ot">&lt;-</span> row.idx <span class="sc">+</span> <span class="dv">1</span> <span class="co"># we select only two rows (450 nm and 620 nm measurements)</span></span>
+<span id="cb4-11"><a href="correct-data.html#cb4-11" aria-hidden="true" tabindex="-1"></a>  col.end <span class="ot">&lt;-</span> col.idx <span class="sc">+</span> (n.cols <span class="sc">-</span> <span class="dv">1</span>) <span class="co"># the number of columns is user defined</span></span>
+<span id="cb4-12"><a href="correct-data.html#cb4-12" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb4-13"><a href="correct-data.html#cb4-13" aria-hidden="true" tabindex="-1"></a>    .[row.idx<span class="sc">:</span>row.end, col.idx<span class="sc">:</span>col.end]</span>
+<span id="cb4-14"><a href="correct-data.html#cb4-14" aria-hidden="true" tabindex="-1"></a>  corr.sample <span class="ot">&lt;-</span> sample[<span class="dv">1</span>, ] <span class="sc">-</span> sample[<span class="dv">2</span>, ]</span>
+<span id="cb4-15"><a href="correct-data.html#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">as.tibble</span>(corr.sample))</span>
+<span id="cb4-16"><a href="correct-data.html#cb4-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-17"><a href="correct-data.html#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="correct-data.html#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute dilution series</span></span>
+<span id="cb4-19"><a href="correct-data.html#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param max.conc.std maximal concentration</span></span>
+<span id="cb4-20"><a href="correct-data.html#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param n.dilutions number of dilutions performed</span></span>
+<span id="cb4-21"><a href="correct-data.html#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @param dilution.fact dilution factor</span></span>
+<span id="cb4-22"><a href="correct-data.html#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @return a vector with concentrations</span></span>
+<span id="cb4-23"><a href="correct-data.html#cb4-23" aria-hidden="true" tabindex="-1"></a>comp.conc <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb4-24"><a href="correct-data.html#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">max.conc.std =</span> max.conc.std, </span>
+<span id="cb4-25"><a href="correct-data.html#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.dilutions =</span> n.dilutions, </span>
+<span id="cb4-26"><a href="correct-data.html#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">dilution.fact =</span> dilution.fact) {</span>
+<span id="cb4-27"><a href="correct-data.html#cb4-27" aria-hidden="true" tabindex="-1"></a>  dilutions <span class="ot">&lt;-</span> <span class="fu">sapply</span>(</span>
+<span id="cb4-28"><a href="correct-data.html#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">seq</span>(<span class="dv">0</span>, (n.dilutions <span class="sc">-</span> <span class="dv">1</span>)),</span>
+<span id="cb4-29"><a href="correct-data.html#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) max.conc.std <span class="sc">/</span> (dilution.fact<span class="sc">^</span>x)</span>
+<span id="cb4-30"><a href="correct-data.html#cb4-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-31"><a href="correct-data.html#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(dilutions)</span>
+<span id="cb4-32"><a href="correct-data.html#cb4-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-33"><a href="correct-data.html#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="correct-data.html#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Get background-corrected standard</span></span>
+<span id="cb4-35"><a href="correct-data.html#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: add documentation</span></span>
+<span id="cb4-36"><a href="correct-data.html#cb4-36" aria-hidden="true" tabindex="-1"></a>get.standard <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">data =</span> data,</span>
+<span id="cb4-37"><a href="correct-data.html#cb4-37" aria-hidden="true" tabindex="-1"></a>                         <span class="at">row.idx =</span> row.idx.std,</span>
+<span id="cb4-38"><a href="correct-data.html#cb4-38" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col.idx =</span> col.idx.std,</span>
+<span id="cb4-39"><a href="correct-data.html#cb4-39" aria-hidden="true" tabindex="-1"></a>                         <span class="at">n.dilutions =</span> n.dilutions,</span>
+<span id="cb4-40"><a href="correct-data.html#cb4-40" aria-hidden="true" tabindex="-1"></a>                         <span class="at">n.repl =</span> n.repl,</span>
+<span id="cb4-41"><a href="correct-data.html#cb4-41" aria-hidden="true" tabindex="-1"></a>                         <span class="at">dilution.fact =</span> dilution.fact,</span>
+<span id="cb4-42"><a href="correct-data.html#cb4-42" aria-hidden="true" tabindex="-1"></a>                         <span class="at">max.conc.std =</span> max.conc.std, </span>
+<span id="cb4-43"><a href="correct-data.html#cb4-43" aria-hidden="true" tabindex="-1"></a>                         <span class="at">concentration =</span> concentrations) {</span>
+<span id="cb4-44"><a href="correct-data.html#cb4-44" aria-hidden="true" tabindex="-1"></a>  row.end <span class="ot">&lt;-</span> row.idx <span class="sc">+</span> (n.dilutions <span class="sc">*</span> <span class="dv">2</span>) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb4-45"><a href="correct-data.html#cb4-45" aria-hidden="true" tabindex="-1"></a>  col.end <span class="ot">&lt;-</span> col.idx <span class="sc">+</span> (n.repl <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb4-46"><a href="correct-data.html#cb4-46" aria-hidden="true" tabindex="-1"></a>  standard <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> .[row.idx<span class="sc">:</span>row.end, col.idx<span class="sc">:</span>col.end]</span>
+<span id="cb4-47"><a href="correct-data.html#cb4-47" aria-hidden="true" tabindex="-1"></a>  corr.standard <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_df</span>(</span>
+<span id="cb4-48"><a href="correct-data.html#cb4-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">seq</span>(<span class="dv">1</span>, row.end, <span class="at">by =</span> <span class="dv">2</span>),</span>
+<span id="cb4-49"><a href="correct-data.html#cb4-49" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> <span class="fu">correct.sample</span>(<span class="at">data =</span> standard, ., <span class="at">col.idx =</span> <span class="dv">1</span>, <span class="at">n.cols =</span> n.repl)</span>
+<span id="cb4-50"><a href="correct-data.html#cb4-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-51"><a href="correct-data.html#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-52"><a href="correct-data.html#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">seq</span>(n.repl)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-53"><a href="correct-data.html#cb4-53" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">concentration =</span> concentrations) <span class="sc">%&gt;%</span></span>
+<span id="cb4-54"><a href="correct-data.html#cb4-54" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">gather</span>(<span class="at">key =</span> replicate, <span class="at">value =</span> absorbance, <span class="sc">-</span>concentration)</span>
+<span id="cb4-55"><a href="correct-data.html#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="correct-data.html#cb4-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(corr.standard)</span>
+<span id="cb4-57"><a href="correct-data.html#cb4-57" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-58"><a href="correct-data.html#cb4-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-59"><a href="correct-data.html#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: add documentation</span></span>
+<span id="cb4-60"><a href="correct-data.html#cb4-60" aria-hidden="true" tabindex="-1"></a>get.donors <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">row.idx =</span> row.idx.donor<span class="fl">.1</span>,</span>
+<span id="cb4-61"><a href="correct-data.html#cb4-61" aria-hidden="true" tabindex="-1"></a>                       <span class="at">col.idx =</span> col.idx.donor<span class="fl">.1</span>,</span>
+<span id="cb4-62"><a href="correct-data.html#cb4-62" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.cols =</span> n.repl.donors <span class="sc">*</span> <span class="fu">length</span>(tpoints)) {</span>
+<span id="cb4-63"><a href="correct-data.html#cb4-63" aria-hidden="true" tabindex="-1"></a>  row.end <span class="ot">&lt;-</span> row.idx <span class="sc">+</span> <span class="dv">1</span> <span class="co"># 450 nm and 620 nm</span></span>
+<span id="cb4-64"><a href="correct-data.html#cb4-64" aria-hidden="true" tabindex="-1"></a>  col.end <span class="ot">&lt;-</span> col.idx <span class="sc">+</span> (n.cols <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb4-65"><a href="correct-data.html#cb4-65" aria-hidden="true" tabindex="-1"></a>  sample <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> .[row.idx<span class="sc">:</span>row.end, col.idx<span class="sc">:</span>col.end]</span>
+<span id="cb4-66"><a href="correct-data.html#cb4-66" aria-hidden="true" tabindex="-1"></a>  corr.donors <span class="ot">&lt;-</span> <span class="fu">correct.sample</span>(</span>
+<span id="cb4-67"><a href="correct-data.html#cb4-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> sample, <span class="at">row.idx =</span> <span class="dv">1</span>, <span class="at">col.idx =</span> <span class="dv">1</span>, <span class="at">n.cols =</span> n.cols</span>
+<span id="cb4-68"><a href="correct-data.html#cb4-68" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-69"><a href="correct-data.html#cb4-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(corr.donors)</span>
+<span id="cb4-70"><a href="correct-data.html#cb4-70" aria-hidden="true" tabindex="-1"></a>} </span></code></pre></div>
 <p>Now we can create a data frame with the corrected data of the standard:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">concentrations &lt;-<span class="st"> </span><span class="kw">comp.conc</span>(
-  <span class="dt">max.conc.std =</span> max.conc.std,
-  <span class="dt">n.dilutions =</span> n.dilutions,
-  <span class="dt">dilution.fact =</span> dilution.fact
-)
-
-standard &lt;-<span class="st"> </span><span class="kw">get.standard</span>(
-  <span class="dt">data =</span> data,
-  <span class="dt">row.idx =</span> row.idx.std,
-  <span class="dt">col.idx =</span> col.idx.std,
-  <span class="dt">n.dilutions =</span> n.dilutions,
-  <span class="dt">n.repl =</span> n.repl.std,
-  <span class="dt">dilution.fact =</span> dilution.fact,
-  <span class="dt">max.conc.std =</span> max.conc.std, 
-  <span class="dt">concentration =</span> concentrations
-)
-<span class="co"># Inspect result</span>
-standard</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="correct-data.html#cb5-1" aria-hidden="true" tabindex="-1"></a>concentrations <span class="ot">&lt;-</span> <span class="fu">comp.conc</span>(</span>
+<span id="cb5-2"><a href="correct-data.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">max.conc.std =</span> max.conc.std,</span>
+<span id="cb5-3"><a href="correct-data.html#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.dilutions =</span> n.dilutions,</span>
+<span id="cb5-4"><a href="correct-data.html#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dilution.fact =</span> dilution.fact</span>
+<span id="cb5-5"><a href="correct-data.html#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="correct-data.html#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="correct-data.html#cb5-7" aria-hidden="true" tabindex="-1"></a>standard <span class="ot">&lt;-</span> <span class="fu">get.standard</span>(</span>
+<span id="cb5-8"><a href="correct-data.html#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data,</span>
+<span id="cb5-9"><a href="correct-data.html#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.idx =</span> row.idx.std,</span>
+<span id="cb5-10"><a href="correct-data.html#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.idx =</span> col.idx.std,</span>
+<span id="cb5-11"><a href="correct-data.html#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.dilutions =</span> n.dilutions,</span>
+<span id="cb5-12"><a href="correct-data.html#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.repl =</span> n.repl.std,</span>
+<span id="cb5-13"><a href="correct-data.html#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">dilution.fact =</span> dilution.fact,</span>
+<span id="cb5-14"><a href="correct-data.html#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">max.conc.std =</span> max.conc.std, </span>
+<span id="cb5-15"><a href="correct-data.html#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">concentration =</span> concentrations</span>
+<span id="cb5-16"><a href="correct-data.html#cb5-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-17"><a href="correct-data.html#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect result</span></span>
+<span id="cb5-18"><a href="correct-data.html#cb5-18" aria-hidden="true" tabindex="-1"></a>standard</span></code></pre></div>
 <pre><code>## # A tibble: 16 x 3
 ##    concentration replicate absorbance
 ##            &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
@@ -253,47 +294,47 @@ standard</code></pre></div>
 ## 15       0.0156  2              0.062
 ## 16       0.00781 2              0.032</code></pre>
 <p>Here we select the wells with the blanks:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get blanks</span>
-blanks &lt;-<span class="st"> </span><span class="kw">correct.sample</span>(data, row.idx.blank, col.idx.blank, <span class="dt">n.cols =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">setNames</span>(<span class="kw">seq</span>(<span class="dv">1</span>, <span class="kw">dim</span>(.)[<span class="dv">2</span>])) <span class="op">%&gt;%</span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> replicate, <span class="dt">value =</span> blank)
-<span class="co"># Inpsect blanks</span>
-blanks</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="correct-data.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get blanks</span></span>
+<span id="cb7-2"><a href="correct-data.html#cb7-2" aria-hidden="true" tabindex="-1"></a>blanks <span class="ot">&lt;-</span> <span class="fu">correct.sample</span>(data, row.idx.blank, col.idx.blank, <span class="at">n.cols =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="correct-data.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">seq</span>(<span class="dv">1</span>, <span class="fu">dim</span>(.)[<span class="dv">2</span>])) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="correct-data.html#cb7-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(<span class="at">key =</span> replicate, <span class="at">value =</span> blank)</span>
+<span id="cb7-5"><a href="correct-data.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Inpsect blanks</span></span>
+<span id="cb7-6"><a href="correct-data.html#cb7-6" aria-hidden="true" tabindex="-1"></a>blanks</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##   replicate   blank
 ##   &lt;chr&gt;       &lt;dbl&gt;
-## 1 1         0.004  
-## 2 2         0.00500</code></pre>
+## 1 1         0.00400
+## 2 2         0.0050</code></pre>
 <p>And finally we create a data frame with the corrected data of our biological samples. In our case, we have a time series with five data points for four donors:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">donors &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map_df</span>(
-  <span class="kw">seq</span>(row.idx.donor.<span class="dv">1</span>, (row.idx.donor.<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(n.donors <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)), <span class="dt">by =</span> <span class="dv">2</span>),
-  <span class="op">~</span><span class="st"> </span><span class="kw">get.donors</span>(., <span class="dt">col.idx =</span> col.idx.donor.<span class="dv">1</span>, <span class="dt">n.cols =</span> <span class="dv">10</span>)
-) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">7.1</span>,<span class="fl">7.2</span>,<span class="fl">30.1</span>,<span class="fl">30.2</span>,<span class="fl">60.1</span>, <span class="fl">60.2</span>, <span class="fl">180.1</span>, <span class="fl">180.2</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">donor =</span> <span class="kw">seq</span>(<span class="dv">1</span>, n.donors)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">donor =</span> <span class="kw">factor</span>(donor, <span class="kw">unique</span>(donor))) <span class="op">%&gt;%</span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;time&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;absorbance&quot;</span>, <span class="op">-</span>donor) <span class="op">%&gt;%</span>
-<span class="st">  </span>tidyr<span class="op">::</span><span class="kw">separate</span>(time, <span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;replicate&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">time =</span> <span class="kw">as.integer</span>(time)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(donor, time)
-donors.av &lt;-<span class="st"> </span>donors <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">absorbance.av =</span> <span class="kw">mean</span>(absorbance)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">ungroup</span>()
-
-<span class="co"># Inspect data</span>
-donors.av</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="correct-data.html#cb9-1" aria-hidden="true" tabindex="-1"></a>donors <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_df</span>(</span>
+<span id="cb9-2"><a href="correct-data.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(row.idx.donor<span class="fl">.1</span>, (row.idx.donor<span class="fl">.1</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> (n.donors <span class="sc">-</span> <span class="dv">1</span>)), <span class="at">by =</span> <span class="dv">2</span>),</span>
+<span id="cb9-3"><a href="correct-data.html#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">get.donors</span>(., <span class="at">col.idx =</span> col.idx.donor<span class="fl">.1</span>, <span class="at">n.cols =</span> <span class="dv">10</span>)</span>
+<span id="cb9-4"><a href="correct-data.html#cb9-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="correct-data.html#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.2</span>,<span class="fl">7.1</span>,<span class="fl">7.2</span>,<span class="fl">30.1</span>,<span class="fl">30.2</span>,<span class="fl">60.1</span>, <span class="fl">60.2</span>, <span class="fl">180.1</span>, <span class="fl">180.2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="correct-data.html#cb9-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">donor =</span> <span class="fu">seq</span>(<span class="dv">1</span>, n.donors)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="correct-data.html#cb9-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">donor =</span> <span class="fu">factor</span>(donor, <span class="fu">unique</span>(donor))) <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="correct-data.html#cb9-8" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(<span class="at">key =</span> <span class="st">&quot;time&quot;</span>, <span class="at">value =</span> <span class="st">&quot;absorbance&quot;</span>, <span class="sc">-</span>donor) <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="correct-data.html#cb9-9" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">separate</span>(time, <span class="fu">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;replicate&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="correct-data.html#cb9-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">time =</span> <span class="fu">as.integer</span>(time)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="correct-data.html#cb9-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(donor, time)</span>
+<span id="cb9-12"><a href="correct-data.html#cb9-12" aria-hidden="true" tabindex="-1"></a>donors.av <span class="ot">&lt;-</span> donors <span class="sc">%&gt;%</span> </span>
+<span id="cb9-13"><a href="correct-data.html#cb9-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(<span class="at">absorbance.av =</span> <span class="fu">mean</span>(absorbance)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href="correct-data.html#cb9-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>()</span>
+<span id="cb9-15"><a href="correct-data.html#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="correct-data.html#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect data</span></span>
+<span id="cb9-17"><a href="correct-data.html#cb9-17" aria-hidden="true" tabindex="-1"></a>donors.av</span></code></pre></div>
 <pre><code>## # A tibble: 20 x 3
 ##    donor  time absorbance.av
 ##    &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt;
-##  1 1         0         0.236
-##  2 1         7         0.497
-##  3 1        30         0.660
+##  1 1         0         0.336
+##  2 1         7         0.596
+##  3 1        30         0.710
 ##  4 1        60         0.804
-##  5 1       180         0.382
-##  6 2         0         0.434
-##  7 2         7         0.629
-##  8 2        30         0.776
-##  9 2        60         0.760
+##  5 1       180         0.482
+##  6 2         0         0.534
+##  7 2         7         0.729
+##  8 2        30         0.825
+##  9 2        60         0.790
 ## 10 2       180         0.660
 ## 11 3         0         0.347
 ## 12 3         7         1.25 
@@ -318,12 +359,13 @@ donors.av</code></pre></div>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -331,12 +373,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -347,7 +389,19 @@ gitbook.start({
 "link": null,
 "text": null
 },
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["analyse-ELISA.pdf", "analyse-ELISA.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -360,10 +414,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
