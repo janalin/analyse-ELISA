@@ -10,5 +10,3 @@ _book*/*
 _bookdown_files
 rsconnect
 analyse-ELISA_cache
-analyse-ELISA_files
-libs
