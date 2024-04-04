@@ -20,7 +20,7 @@ Note from 04-Apr-2024: This document was developed in 2018 and may contain outda
 ## About the experiment in brief
 We measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm -- to measure the substrate specific absorbance -- and at 620 nm -- to measure the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.
 
-## Load libraries and import excel fiele
+## Load libraries and import excel file
 We first load some _R_ libraries that we want to use.
 ```{r, load-libs, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 # load packages
