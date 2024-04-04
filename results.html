@@ -143,7 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#about-the-experiment-in-brief"><i class="fa fa-check"></i><b>1.1</b> About the experiment in brief</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-fiele"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel fiele</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-file"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel file</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#set-cell-indices-and-set-experimental-parameteres"><i class="fa fa-check"></i><b>1.3</b> Set cell indices and set experimental parameteres</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="correct-data.html"><a href="correct-data.html"><i class="fa fa-check"></i><b>2</b> Correct data</a></li>
@@ -194,22 +194,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb30-3"><a href="results.html#cb30-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span><span class="sc">/</span>n.est) <span class="sc">*</span> (<span class="fu">log</span>( ((Amax.est <span class="sc">-</span> A)<span class="sc">/</span>(A <span class="sc">-</span> Amin))) <span class="sc">+</span> log2EC50.est<span class="sc">*</span>n.est))</span>
 <span id="cb30-4"><a href="results.html#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-5"><a href="results.html#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get confidence intervals</span></span>
-<span id="cb30-6"><a href="results.html#cb30-6" aria-hidden="true" tabindex="-1"></a>fgh <span class="ot">&lt;-</span> <span class="fu">deriv</span>(</span>
-<span id="cb30-7"><a href="results.html#cb30-7" aria-hidden="true" tabindex="-1"></a>  log2concentration <span class="sc">~</span> (<span class="dv">1</span><span class="sc">/</span>n) <span class="sc">*</span> (<span class="fu">log</span>( ((Amax <span class="sc">-</span> A)<span class="sc">/</span>(A <span class="sc">-</span> Amin))) <span class="sc">+</span> log2EC50<span class="sc">*</span>n),</span>
-<span id="cb30-8"><a href="results.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}</span>
-<span id="cb30-9"><a href="results.html#cb30-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-10"><a href="results.html#cb30-10" aria-hidden="true" tabindex="-1"></a>f.new <span class="ot">&lt;-</span> <span class="fu">fgh</span>(Amax.est, log2EC50.est, n.est, donors.av<span class="sc">$</span>absorbance.av)</span>
-<span id="cb30-11"><a href="results.html#cb30-11" aria-hidden="true" tabindex="-1"></a>g.new <span class="ot">&lt;-</span> <span class="fu">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</span>
-<span id="cb30-12"><a href="results.html#cb30-12" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">rowSums</span>((g.new <span class="sc">%*%</span> cov.fit) <span class="sc">*</span> g.new)</span>
-<span id="cb30-13"><a href="results.html#cb30-13" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb30-14"><a href="results.html#cb30-14" aria-hidden="true" tabindex="-1"></a>delta.f <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(gs) <span class="sc">*</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="dv">15</span>)</span>
-<span id="cb30-15"><a href="results.html#cb30-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> donors.av <span class="sc">%&gt;%</span> </span>
-<span id="cb30-16"><a href="results.html#cb30-16" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">concentration.est =</span> <span class="dv">2</span><span class="sc">^</span>log2concentration.est) <span class="sc">%&gt;%</span></span>
-<span id="cb30-17"><a href="results.html#cb30-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">log2concentration.est =</span> log2concentration.est) <span class="sc">%&gt;%</span></span>
-<span id="cb30-18"><a href="results.html#cb30-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">log2conf =</span> delta.f) </span>
-<span id="cb30-19"><a href="results.html#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-20"><a href="results.html#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect results</span></span>
-<span id="cb30-21"><a href="results.html#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(results)</span></code></pre></div>
+<span id="cb30-6"><a href="results.html#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: experimental -- to double-check</span></span>
+<span id="cb30-7"><a href="results.html#cb30-7" aria-hidden="true" tabindex="-1"></a>fgh <span class="ot">&lt;-</span> <span class="fu">deriv</span>(</span>
+<span id="cb30-8"><a href="results.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  log2concentration <span class="sc">~</span> (<span class="dv">1</span><span class="sc">/</span>n) <span class="sc">*</span> (<span class="fu">log</span>( ((Amax <span class="sc">-</span> A)<span class="sc">/</span>(A <span class="sc">-</span> Amin))) <span class="sc">+</span> log2EC50<span class="sc">*</span>n),</span>
+<span id="cb30-9"><a href="results.html#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;Amax&quot;</span>, <span class="st">&quot;log2EC50&quot;</span>, <span class="st">&quot;n&quot;</span>), <span class="cf">function</span>(Amax, log2EC50, n, A) {}</span>
+<span id="cb30-10"><a href="results.html#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-11"><a href="results.html#cb30-11" aria-hidden="true" tabindex="-1"></a>f.new <span class="ot">&lt;-</span> <span class="fu">fgh</span>(Amax.est, log2EC50.est, n.est, donors.av<span class="sc">$</span>absorbance.av)</span>
+<span id="cb30-12"><a href="results.html#cb30-12" aria-hidden="true" tabindex="-1"></a>g.new <span class="ot">&lt;-</span> <span class="fu">attr</span>(f.new, <span class="st">&quot;gradient&quot;</span>)</span>
+<span id="cb30-13"><a href="results.html#cb30-13" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">rowSums</span>((g.new <span class="sc">%*%</span> cov.fit) <span class="sc">*</span> g.new)</span>
+<span id="cb30-14"><a href="results.html#cb30-14" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb30-15"><a href="results.html#cb30-15" aria-hidden="true" tabindex="-1"></a>delta.f <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(gs) <span class="sc">*</span> <span class="fu">qt</span>(<span class="dv">1</span> <span class="sc">-</span> alpha<span class="sc">/</span><span class="dv">2</span>, <span class="dv">15</span>)</span>
+<span id="cb30-16"><a href="results.html#cb30-16" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> donors.av <span class="sc">%&gt;%</span> </span>
+<span id="cb30-17"><a href="results.html#cb30-17" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">concentration.est =</span> <span class="dv">2</span><span class="sc">^</span>log2concentration.est) <span class="sc">%&gt;%</span></span>
+<span id="cb30-18"><a href="results.html#cb30-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">log2concentration.est =</span> log2concentration.est) <span class="sc">%&gt;%</span></span>
+<span id="cb30-19"><a href="results.html#cb30-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">log2conf =</span> delta.f) </span>
+<span id="cb30-20"><a href="results.html#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-21"><a href="results.html#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect results</span></span>
+<span id="cb30-22"><a href="results.html#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(results)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 7
 ##   donor  time absorbance.av ID     concentration.est log2concentration… log2conf
 ##   &lt;fct&gt; &lt;int&gt;         &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt;              &lt;dbl&gt;    &lt;dbl&gt;

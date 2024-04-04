@@ -12,6 +12,7 @@ log2concentration.est <- sapply(donors.av$absorbance.av,
   (1/n.est) * (log( ((Amax.est - A)/(A - Amin))) + log2EC50.est*n.est))
 
 # Get confidence intervals
+# TODO: experimental -- to double-check
 fgh <- deriv(
   log2concentration ~ (1/n) * (log( ((Amax - A)/(A - Amin))) + log2EC50*n),
   c("Amax", "log2EC50", "n"), function(Amax, log2EC50, n, A) {}

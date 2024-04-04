@@ -143,7 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#about-the-experiment-in-brief"><i class="fa fa-check"></i><b>1.1</b> About the experiment in brief</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-fiele"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel fiele</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-libraries-and-import-excel-file"><i class="fa fa-check"></i><b>1.2</b> Load libraries and import excel file</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#set-cell-indices-and-set-experimental-parameteres"><i class="fa fa-check"></i><b>1.3</b> Set cell indices and set experimental parameteres</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="correct-data.html"><a href="correct-data.html"><i class="fa fa-check"></i><b>2</b> Correct data</a></li>
@@ -273,7 +273,7 @@ The Levenberg-Marquardt algorithm is more robust than the Gauss–Newton algorit
 <span id="cb25-13"><a href="calibration.html#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb25-14"><a href="calibration.html#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-15"><a href="calibration.html#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute prediction and confidence intervals</span></span>
-<span id="cb25-16"><a href="calibration.html#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: experimental -- ignore this part for now</span></span>
+<span id="cb25-16"><a href="calibration.html#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: experimental -- to double-check</span></span>
 <span id="cb25-17"><a href="calibration.html#cb25-17" aria-hidden="true" tabindex="-1"></a>fgh <span class="ot">&lt;-</span> <span class="fu">deriv</span>(</span>
 <span id="cb25-18"><a href="calibration.html#cb25-18" aria-hidden="true" tabindex="-1"></a>  absorbance <span class="sc">~</span></span>
 <span id="cb25-19"><a href="calibration.html#cb25-19" aria-hidden="true" tabindex="-1"></a>  Amin <span class="sc">+</span> ((Amax <span class="sc">-</span> Amin) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(n <span class="sc">*</span> (log2concentration <span class="sc">-</span> log2EC50)))),</span>

@@ -57,7 +57,7 @@ calibration.curve <- tibble(
 )
 
 ## Compute prediction and confidence intervals
-# TODO: experimental -- ignore this part for now
+# TODO: experimental -- to double-check
 fgh <- deriv(
   absorbance ~
   Amin + ((Amax - Amin) / (1 + exp(n * (log2concentration - log2EC50)))),
