@@ -1,7 +1,7 @@
 ---
 title: "Analyse ELISA data in _R_"
 author: "JL"
-date: "`r Sys.Date()`"
+date: "2018-11-27"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -14,6 +14,8 @@ description: ""
 
 # Introduction {#intro}
 This document shows how to analyse ELISA data in _R_. The code was written to analyse ELISA experiments performed in our lab: the script reads the excel file provided by a _Synergy H1_ 96-well plate reader from BioTek, performs a background-correction, generates the calibration curve and computes the sample concentrations with respect to this calibration curve.
+
+Note from 04-Apr-2024: This document was developed in 2018 and may contain outdated and partially experimental code -- use on your own responsibility. You should understand the calculations behind the analysis before applying them to your data.
 
 ## About the experiment in brief
 We measured the IgG amount in blood serum of four donors using an _indirect ELISA_. The detection antibody was conjugated to horseradish peroxidase (HRP). As a substrate solution, we used TMB from Thermo Fisher Scientific. We measured absorbance at 450 nm -- to measure the substrate specific absorbance -- and at 620 nm -- to measure the (unspecific) background absorbance. The absorbance of both wavelength is provided by the plate reader in a single excel sheet. If we say background correction we mean that we substract the values obtained at 620 nm from the values obtained at 450 nm.
@@ -38,41 +40,28 @@ pacman::p_load(bookdown, # to create this document
 Now we read the excel file:
 ```{r, import-data, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
 # Set the name of the excel file
-xlsx.file <- paste0(here::here(),
-  "/../../PROJECTS/vaccine_response/data-raw/elisa_igg_igm/180821-HV_first_test_IgG.xlsx")
+# Note: this is example data used for illustrative purposes only.
+xlsx.file <- file.path(here::here(), "example-data.xlsx")
 # Import excel data
-#data <- gdata::read.xls(xlsx.file, sheet = 1, header = FALSE) %>% as.tibble
 data <- readxl::read_xlsx(xlsx.file, sheet = 1, col_names = FALSE) %>% as.tibble
 # Let's have a look at the absorbance data.
-#head(data[complete.cases(data),])
-#View(data)
+# View(data)
 ```
 
 The odd rows show the absorbance at 450 nm and the even rows the absorbance at 620 nm. As expected, the background absorbance at 620 nm is very low. 
 
-And these are our plate reader specifications
-```{r, plate-reader, echo = FALSE, eval = TRUE, warning = FALSE, message = FALSE}
-## add titer data
-titer.file <- paste0(here::here(), "/../../PROJECTS/vaccine_response/data/postprocess-HV_data.csv")
-titer <- readr::read_csv(titer.file)
-
-# Inspect plate reader specifications:
-data[,1:2]
-```
-
 ## Set cell indices and set experimental parameteres
 We need to specify some experiment-specific parameters manually such as the position of the wells with the standard samples and blanks, the number of replicates, etc. 
 ```{r, select-cells, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE}
-# Use View(data) to double-check row and column indices
-
 ## BLANKS
-# Location of the 450 nm measurment of our blanks
+# Location of the 450 nm measurement of our blanks in the `data` table.
+# Use View(data) to double-check row and column indices:
 row.idx.blank <- 40
 col.idx.blank <- 13
 
 ## STANDARD SAMPLES
-# Location of the 450 nm measurment of the first well 
-# of our standard (well 1A in our case)
+# Location of the 450 nm measurement of the first well 
+# of our standard (well 1A in our case -> row 26 and column 3 in `data` table)
 row.idx.std <- 26
 col.idx.std <- 3
 # Number of replicates of the standard
@@ -88,9 +77,9 @@ dilution.fact = 2
 # Location of first well with the sample of the first donor (here well 3A)
 row.idx.donor.1 <- 26
 col.idx.donor.1 <- 5
-n.donors <- 4
-tpoints <- c(0, 7, 30, 60, 180)
-n.repl.donors <- 2
+n.donors <- 4 # Four donors
+tpoints <- c(0, 7, 30, 60, 180) # Five time points
+n.repl.donors <- 2 # Two replicate measurements per donor and time point
 ```
 
 Now we can start analysing the data.

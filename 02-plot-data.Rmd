@@ -116,11 +116,11 @@ plot.std(semilog = TRUE)
 ## Plot biological samples
 Now let's have a look at our actual data. We measured IgG in serum of four donors on five different time points. We first define a plot for our biological samples and then plot it together with the standard curve to have a better overview.
 ```{r, plot-samples, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, chache = TRUE}
-# select HV
-ID.selected <- c("BD1989", "MS1984", "SM1988", "HJ1992")
-
-donors.av <- donors.av %>% dplyr::mutate(ID = c(rep("BD1989", 5), rep("MS1984", 5), rep( "SM1988", 5), rep("HJ1992", 5)))
+# Select biological samples
+ID.selected <- c("AB1981", "CD1982", "EF1983", "GH1984")
+donors.av <- donors.av %>% dplyr::mutate(ID = rep(ID.selected, each = 5))
 donors.av
+
 plot.donors <- ggplot() +
     geom_point(data = donors.av, 
       aes(time, absorbance.av, color = donor), alpha = 0.7) +
@@ -128,7 +128,7 @@ plot.donors <- ggplot() +
       aes(time, absorbance.av, group = donor, color = donor), alpha = 0.6, lwd = 0.5) +
     labs(
       x = "Days after vaccination", y = "Absorbance (a. u.)",
-      title = "IgG in serum of healthy volunteers"
+      title = "[Illustrative example] IgG in serum after vaccination"
     ) +
     scale_color_viridis(
       begin = 0.2, end = 0.8, discrete = TRUE,
@@ -149,7 +149,7 @@ plot.donors <- ggplot() +
     background_grid(
       major = "yx", minor = "", colour.major = "grey90", size.major = 0.2
     ) +
-    theme_plot() + ylim(0,2)
+    theme_plot()
 ```
 
 ## Combine plots

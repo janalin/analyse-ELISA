@@ -42,7 +42,7 @@ plot.results <- ggplot(
   labs(
     x = "Days after vaccination",
     y = "Relative concentration",
-    title = "IgG serum of in healthy volunteers"
+    title = "[Illustrative example] IgG in serum after vaccination"
   ) +
   scale_color_viridis(
     begin = 0.2, end = 0.8, discrete = TRUE,

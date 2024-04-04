@@ -24,13 +24,11 @@ levm.fit <- nlsLM(
 # Show summary of the fit
 summary(levm.fit)
 
-#standard<- standard %>%filter(log2concentration > -7)
-
-View(standard)
+# View(standard)
 ```
 Apparently, we can not estimate $\mathrm{A_{min}}$ from the data. But we can fix it to a certain value: we know that $\mathrm{A_{min}}$ can not be negative and we can use the values obtained from the blank wells as an estimate for $\mathrm{A_{min}}$.
 
-```{r, lm-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=8}
+```{r, lm-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=5, fig.width=9}
 # Set Amin to blank values
 Amin <- median(blanks$blank)
 # Re-fit with only three free parameters
@@ -59,7 +57,7 @@ calibration.curve <- tibble(
 )
 
 ## Compute prediction and confidence intervals
-# TODO: double-check, ignore this part for now
+# TODO: experimental -- ignore this part for now
 fgh <- deriv(
   absorbance ~
   Amin + ((Amax - Amin) / (1 + exp(n * (log2concentration - log2EC50)))),
@@ -104,11 +102,6 @@ plot.ccurve
 ```
 
 The grey band shows the prediction interval and the dashed line the confidence interval (both for 95%).
-
-```{r, tukey-plot, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, fig.height=4}
-# Plot predicted absorbance vs residuals
-plot(levm.fit)
-```
 
 Alternatively, one can use the `drc` package to fit a 4-PL curve using. However, the `drm` function performs a $\ln$ transformation of the independent variable by itself. So in this case, the results are for $\ln$-transformed concentrations:
 ```{r, drc-fit, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE, cache = TRUE, fig.height=4}
