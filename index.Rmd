@@ -77,8 +77,8 @@ dilution.fact = 2
 # Location of first well with the sample of the first donor (here well 3A)
 row.idx.donor.1 <- 26
 col.idx.donor.1 <- 5
-n.donors <- 4 # Four donors
-tpoints <- c(0, 7, 30, 60, 180) # Five time points
+n.donors <- 4 # Four donors, pipetted in horizontal order
+tpoints <- c(0, 7, 30, 60, 180) # Five time points, pipetted in vertical order
 n.repl.donors <- 2 # Two replicate measurements per donor and time point
 ```
 

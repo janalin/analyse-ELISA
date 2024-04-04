@@ -14,7 +14,10 @@ correct.sample <- function(data, row.idx, col.idx, n.cols) {
   col.end <- col.idx + (n.cols - 1) # the number of columns is user defined
   sample <- data %>%
     .[row.idx:row.end, col.idx:col.end]
+  # Subtract background OD value for each sample
+  # Note: in our example data, 450 nm OD results are always on top of 620 nm OD results.
   corr.sample <- sample[1, ] - sample[2, ]
+  # Return background-corrected OD value
   return(as.tibble(corr.sample))
 }
 
@@ -44,7 +47,8 @@ get.standard <- function(data = data,
                          dilution.fact = dilution.fact,
                          max.conc.std = max.conc.std, 
                          concentration = concentrations) {
-  row.end <- row.idx + (n.dilutions * 2) - 1
+  # Assumes that the standard dilutions were pipetted in vertical order
+  row.end <- row.idx + (n.dilutions * 2) - 1 
   col.end <- col.idx + (n.repl - 1)
   standard <- data %>% .[row.idx:row.end, col.idx:col.end]
   corr.standard <- purrr::map_df(
@@ -97,11 +101,11 @@ standard
 
 Here we select the wells with the blanks:
 ```{r, get-blanks, echo = TRUE, eval = TRUE, warning = FALSE, message = FALSE}
-# get blanks
+# Get blanks
 blanks <- correct.sample(data, row.idx.blank, col.idx.blank, n.cols = 2) %>%
   setNames(seq(1, dim(.)[2])) %>%
   tidyr::gather(key = replicate, value = blank)
-# Inpsect blanks
+# Inspect blanks
 blanks
 ```
 
@@ -111,7 +115,8 @@ donors <- purrr::map_df(
   seq(row.idx.donor.1, (row.idx.donor.1 + 2 * (n.donors - 1)), by = 2),
   ~ get.donors(., col.idx = col.idx.donor.1, n.cols = 10)
 ) %>%
-  setNames(c(0.1,0.2,7.1,7.2,30.1,30.2,60.1, 60.2, 180.1, 180.2)) %>%
+  # Add names that indicate time point and replicate ID separated by a dot
+  setNames(c(0.1, 0.2, 7.1, 7.2, 30.1, 30.2, 60.1, 60.2, 180.1, 180.2)) %>%
   dplyr::mutate(donor = seq(1, n.donors)) %>%
   dplyr::mutate(donor = factor(donor, unique(donor))) %>%
   tidyr::gather(key = "time", value = "absorbance", -donor) %>%
