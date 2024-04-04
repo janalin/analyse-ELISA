@@ -2,8 +2,7 @@
 
 Page online: <a href="https://janalin.github.io/analyse-ELISA/">https://janalin.github.io/analyse-ELISA/</a>
 
-An _R_ script to analyse ELISA data from a plate reader. 
-This script is based on an illustrative example data set.
+An _R_ script to analyse ELISA data from a plate reader based on an illustrative example data set.
 
 ### Disclaimer
 This document was developed in 2016 and may contain outdated and partially experimental code -- please use on your own responsibility. You should understand the calculations behind the analysis before applying them to your own data.
